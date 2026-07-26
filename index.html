@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习打卡 - 分班考试加油！</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">📚</span>
+                <span class="logo-text">学习打卡</span>
+            </div>
+            <div class="mode-switch">
+                <button id="kidModeBtn" class="mode-btn active">小孩模式</button>
+                <button id="parentModeBtn" class="mode-btn">家长模式</button>
+            </div>
+        </header>
+
+        <main id="mainContent" class="main">
+        </main>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">添加任务</h3>
+                <button id="modalClose" class="modal-close">&times;</button>
+            </div>
+            <div id="modalBody" class="modal-body">
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

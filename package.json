@@ -1,0 +1,21 @@
+{
+  "name": "study-checkin",
+  "version": "1.0.0",
+  "description": "学习打卡应用 - 分班考试准备",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "better-sqlite3": "^13.0.1"
+  }
+}
