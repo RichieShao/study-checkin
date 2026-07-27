@@ -347,6 +347,20 @@ html, body {
 }
 .pomodoro-tips p { font-size: 14px; font-weight: 400; color: var(--c-text-2); }
 .shop-title { font-size: 20px; font-weight: 700; color: var(--c-text); }
+.shop-points-info {
+  display: flex; gap: 12px; width: 100%;
+}
+.shop-points-info .pts-card {
+  flex: 1; border-radius: var(--r-md); padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 2px;
+  border: 1px solid var(--c-border);
+}
+.shop-points-info .pts-card.earned { background: linear-gradient(135deg, #FFF5CC 0%, #FFE0A6 100%); border-color: #FFFFFF; }
+.shop-points-info .pts-card.avail { background: linear-gradient(135deg, #D0ECFF 0%, #A0D8FF 100%); border-color: #FFFFFF; }
+.shop-points-info .pts-label { font-size: 12px; font-weight: 600; opacity: 0.7; }
+.shop-points-info .pts-value { font-size: 26px; font-weight: 700; line-height: 1.1; }
+.shop-points-info .pts-card.earned .pts-value { color: var(--c-orange); }
+.shop-points-info .pts-card.avail .pts-value { color: var(--c-blue); }
 .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .reward-card {
   background: #FFFFFF; border: 1px solid #FFFFFF;
@@ -782,6 +796,7 @@ html, body {
 
         <section class="page" id="page-shop">
           <h3 class="shop-title">积分商城</h3>
+          <div class="shop-points-info" id="shop-points-info"></div>
           <div class="shop-grid" id="shop-grid"></div>
         </section>
       </div>
@@ -1079,9 +1094,7 @@ function updateCountdown() {
 // ============== 积分显示 ==============
 function updatePointsDisplay() {
   // 显示累计获得积分
-  let totalEarned = 0;
-  APP.pointsLog.forEach(l => { if (l.amount > 0) totalEarned += l.amount; });
-  document.getElementById('kid-points').textContent = totalEarned;
+  document.getElementById('kid-points').textContent = getEarnedPoints();
 }
 
 // ============== 打卡天数 ==============
@@ -1429,11 +1442,29 @@ document.querySelectorAll('[data-pomo-mode]').forEach(btn => {
 });
 
 // ============== 积分商城 ==============
+function getEarnedPoints() {
+  let total = 0;
+  APP.pointsLog.forEach(l => { if (l.amount > 0) total += l.amount; });
+  return total;
+}
+function getSpentPoints() {
+  let total = 0;
+  APP.pointsLog.forEach(l => { if (l.amount < 0) total += Math.abs(l.amount); });
+  return total;
+}
 function renderShop() {
+  // 积分信息栏：所得积分 + 可用积分
+  const earned = getEarnedPoints();
+  const available = APP.points;
+  const info = document.getElementById('shop-points-info');
+  info.innerHTML =
+    '<div class="pts-card earned"><span class="pts-label">所得积分</span><span class="pts-value">' + earned + '</span></div>' +
+    '<div class="pts-card avail"><span class="pts-label">可用积分</span><span class="pts-value">' + available + '</span></div>';
+
   const grid = document.getElementById('shop-grid');
   grid.innerHTML = '';
   APP.rewards.forEach(r => {
-    const canAfford = APP.points >= r.cost;
+    const canAfford = available >= r.cost;
     const card = document.createElement('div');
     card.className = 'reward-card';
     card.innerHTML =
