@@ -193,6 +193,16 @@ const App = {
     currentMode: 'kid',
     currentParentTab: 'overview',
     currentKidTab: 'tasks',
+    pomodoro: {
+        workDuration: 25,
+        breakDuration: 5,
+        mode: 'work',
+        timeLeft: 25 * 60,
+        isRunning: false,
+        timerId: null,
+        linkedTaskId: null,
+        completedPomodoros: 0
+    },
 
     async init() {
         const settings = await Storage.getSettings();
@@ -263,6 +273,7 @@ const App = {
 
             <div class="kid-tabs">
                 <button class="kid-tab ${this.currentKidTab === 'tasks' ? 'active' : ''}" data-kid-tab="tasks">📝 今日任务</button>
+                <button class="kid-tab ${this.currentKidTab === 'pomodoro' ? 'active' : ''}" data-kid-tab="pomodoro">🍅 番茄钟</button>
                 <button class="kid-tab ${this.currentKidTab === 'shop' ? 'active' : ''}" data-kid-tab="shop">🎁 积分兑换</button>
             </div>
 
@@ -286,6 +297,10 @@ const App = {
                 <button class="add-btn" id="addTaskBtn">
                     <span>＋</span> 添加任务
                 </button>
+            </div>
+
+            <div class="kid-tab-content ${this.currentKidTab === 'pomodoro' ? '' : 'hidden'}" id="kidTabPomodoro">
+                ${await this.renderPomodoroTab(tasks)}
             </div>
 
             <div class="kid-tab-content ${this.currentKidTab === 'shop' ? '' : 'hidden'}" id="kidTabShop">
@@ -348,6 +363,76 @@ const App = {
         `;
     },
 
+    async renderPomodoroTab(todayTasks) {
+        const p = this.pomodoro;
+        const minutes = Math.floor(p.timeLeft / 60);
+        const seconds = p.timeLeft % 60;
+        const timeStr = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        const totalTime = p.mode === 'work' ? p.workDuration * 60 : p.breakDuration * 60;
+        const progress = ((totalTime - p.timeLeft) / totalTime) * 100;
+        const circumference = 2 * Math.PI * 120;
+        const strokeDashoffset = circumference - (progress / 100) * circumference;
+
+        const incompleteTasks = todayTasks.filter(t => !t.completed);
+        const linkedTask = todayTasks.find(t => t.id === p.linkedTaskId);
+
+        return `
+            <div class="pomodoro-container">
+                <div class="pomodoro-mode-switch">
+                    <button class="pomodoro-mode-btn ${p.mode === 'work' ? 'active' : ''}" data-pomo-mode="work">
+                        🍅 专注 ${p.workDuration}分钟
+                    </button>
+                    <button class="pomodoro-mode-btn ${p.mode === 'break' ? 'active' : ''}" data-pomo-mode="break">
+                        ☕ 休息 ${p.breakDuration}分钟
+                    </button>
+                </div>
+
+                <div class="pomodoro-timer-wrapper">
+                    <svg class="pomodoro-progress-ring" viewBox="0 0 260 260">
+                        <circle class="pomodoro-ring-bg" cx="130" cy="130" r="120" fill="none" stroke-width="12"/>
+                        <circle class="pomodoro-ring-progress ${p.mode}" cx="130" cy="130" r="120" fill="none" stroke-width="12"
+                            stroke-dasharray="${circumference}" stroke-dashoffset="${strokeDashoffset}"
+                            transform="rotate(-90 130 130)"/>
+                    </svg>
+                    <div class="pomodoro-timer-display">
+                        <div class="pomodoro-time">${timeStr}</div>
+                        <div class="pomodoro-mode-label">${p.mode === 'work' ? '专注时间' : '休息时间'}</div>
+                        ${p.completedPomodoros > 0 ? `<div class="pomodoro-count">已完成 ${p.completedPomodoros} 个番茄</div>` : ''}
+                    </div>
+                </div>
+
+                <div class="pomodoro-task-link">
+                    <label class="form-label">关联任务（可选）</label>
+                    <select class="form-input" id="pomoTaskSelect">
+                        <option value="">-- 不关联任务 --</option>
+                        ${incompleteTasks.map(t => `
+                            <option value="${t.id}" ${t.id === p.linkedTaskId ? 'selected' : ''}>
+                                ${this.escapeHtml(t.title)} (${SUBJECTS[t.subject].name})
+                            </option>
+                        `).join('')}
+                    </select>
+                    ${linkedTask ? `<div class="pomodoro-linked-task">当前关联：${this.escapeHtml(linkedTask.title)}</div>` : ''}
+                </div>
+
+                <div class="pomodoro-controls">
+                    ${!p.isRunning ? `
+                        <button class="pomodoro-btn primary" id="pomoStartBtn">
+                            ${p.timeLeft < totalTime ? '▶ 继续' : '▶ 开始'}
+                        </button>
+                    ` : `
+                        <button class="pomodoro-btn warning" id="pomoPauseBtn">⏸ 暂停</button>
+                    `}
+                    <button class="pomodoro-btn secondary" id="pomoResetBtn">↺ 重置</button>
+                </div>
+
+                <div class="pomodoro-tips">
+                    <div class="pomodoro-tip">💡 一个番茄钟 = ${p.workDuration}分钟专注 + ${p.breakDuration}分钟休息</div>
+                    <div class="pomodoro-tip">🎯 完成后可获得 ${p.workDuration} 积分奖励</div>
+                </div>
+            </div>
+        `;
+    },
+
      async bindKidModeEvents() {
         document.querySelectorAll('.kid-tab').forEach(tab => {
             tab.addEventListener('click', () => {
@@ -390,6 +475,139 @@ const App = {
                 });
             }
         });
+
+        this.bindPomodoroEvents();
+    },
+
+    bindPomodoroEvents() {
+        document.querySelectorAll('.pomodoro-mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (this.pomodoro.isRunning) return;
+                const mode = btn.dataset.pomoMode;
+                this.switchPomodoroMode(mode);
+            });
+        });
+
+        const taskSelect = document.getElementById('pomoTaskSelect');
+        if (taskSelect) {
+            taskSelect.addEventListener('change', (e) => {
+                this.pomodoro.linkedTaskId = e.target.value || null;
+            });
+        }
+
+        const startBtn = document.getElementById('pomoStartBtn');
+        if (startBtn) {
+            startBtn.addEventListener('click', () => this.startPomodoro());
+        }
+
+        const pauseBtn = document.getElementById('pomoPauseBtn');
+        if (pauseBtn) {
+            pauseBtn.addEventListener('click', () => this.pausePomodoro());
+        }
+
+        const resetBtn = document.getElementById('pomoResetBtn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => this.resetPomodoro());
+        }
+    },
+
+    switchPomodoroMode(mode) {
+        this.pomodoro.mode = mode;
+        this.pomodoro.timeLeft = mode === 'work'
+            ? this.pomodoro.workDuration * 60
+            : this.pomodoro.breakDuration * 60;
+        this.render();
+    },
+
+    startPomodoro() {
+        if (this.pomodoro.isRunning) return;
+        this.pomodoro.isRunning = true;
+        this.pomodoro.timerId = setInterval(() => this.tickPomodoro(), 1000);
+        this.render();
+    },
+
+    pausePomodoro() {
+        this.pomodoro.isRunning = false;
+        if (this.pomodoro.timerId) {
+            clearInterval(this.pomodoro.timerId);
+            this.pomodoro.timerId = null;
+        }
+        this.render();
+    },
+
+    resetPomodoro() {
+        this.pausePomodoro();
+        this.pomodoro.timeLeft = this.pomodoro.mode === 'work'
+            ? this.pomodoro.workDuration * 60
+            : this.pomodoro.breakDuration * 60;
+        this.render();
+    },
+
+    async tickPomodoro() {
+        if (!this.pomodoro.isRunning) return;
+
+        this.pomodoro.timeLeft--;
+
+        if (this.pomodoro.timeLeft <= 0) {
+            this.pausePomodoro();
+            await this.completePomodoro();
+            return;
+        }
+
+        const timerDisplay = document.querySelector('.pomodoro-time');
+        if (timerDisplay) {
+            const minutes = Math.floor(this.pomodoro.timeLeft / 60);
+            const seconds = this.pomodoro.timeLeft % 60;
+            timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        const p = this.pomodoro;
+        const totalTime = p.mode === 'work' ? p.workDuration * 60 : p.breakDuration * 60;
+        const progress = ((totalTime - p.timeLeft) / totalTime) * 100;
+        const circumference = 2 * Math.PI * 120;
+        const strokeDashoffset = circumference - (progress / 100) * circumference;
+        const progressRing = document.querySelector('.pomodoro-ring-progress');
+        if (progressRing) {
+            progressRing.style.strokeDashoffset = strokeDashoffset;
+        }
+    },
+
+    async completePomodoro() {
+        const p = this.pomodoro;
+
+        if (p.mode === 'work') {
+            p.completedPomodoros++;
+            const points = p.workDuration;
+
+            let desc = `完成番茄钟：专注 ${p.workDuration} 分钟`;
+            if (p.linkedTaskId) {
+                const tasks = await Storage.getTasks();
+                const task = tasks.find(t => t.id === p.linkedTaskId);
+                if (task) {
+                    desc = `完成番茄钟：${task.title}（${p.workDuration}分钟）`;
+                }
+            }
+
+            await Storage.addPointsLog({
+                id: generateId(),
+                type: 'earn',
+                points: points,
+                description: desc,
+                createdAt: new Date().toISOString()
+            });
+
+            this.showToast(`🍅 番茄钟完成！+${points} 积分 🎉`, 'success');
+            this.celebrate();
+
+            p.mode = 'break';
+            p.timeLeft = p.breakDuration * 60;
+        } else {
+            this.showToast('☕ 休息结束！准备好继续专注了吗？', 'success');
+            p.mode = 'work';
+            p.timeLeft = p.workDuration * 60;
+        }
+
+        this.render();
     },
 
      async toggleTask(id) {
