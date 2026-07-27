@@ -63,108 +63,129 @@ function formatDisplayDate(dateStr) {
 }
 
 const Storage = {
-    async api(url, options = {}) {
-        const res = await fetch(url, {
-            headers: { 'Content-Type': 'application/json' },
-            ...options
-        });
-        if (!res.ok) throw new Error(`API Error: ${res.status}`);
-        return res.json();
+    _get(key, fallback) {
+        try {
+            const raw = localStorage.getItem(key);
+            return raw ? JSON.parse(raw) : fallback;
+        } catch (e) {
+            return fallback;
+        }
+    },
+
+    _set(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+            console.error('Storage error:', e);
+        }
     },
 
     async getTasks(date) {
-        const url = date ? `/api/tasks?date=${date}` : '/api/tasks';
-        return this.api(url);
+        let tasks = this._get(STORAGE_KEYS.TASKS, []);
+        if (date) tasks = tasks.filter(t => t.date === date);
+        return tasks;
     },
 
     async addTask(task) {
-        return this.api('/api/tasks', {
-            method: 'POST',
-            body: JSON.stringify(task)
-        });
+        const tasks = this._get(STORAGE_KEYS.TASKS, []);
+        tasks.push(task);
+        this._set(STORAGE_KEYS.TASKS, tasks);
+        return task;
     },
 
     async updateTask(id, updates) {
-        return this.api(`/api/tasks/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(updates)
-        });
+        const tasks = this._get(STORAGE_KEYS.TASKS, []);
+        const index = tasks.findIndex(t => t.id === id);
+        if (index === -1) throw new Error('Not found');
+        tasks[index] = { ...tasks[index], ...updates };
+        this._set(STORAGE_KEYS.TASKS, tasks);
+        return tasks[index];
     },
 
     async deleteTask(id) {
-        return this.api(`/api/tasks/${id}`, { method: 'DELETE' });
+        const tasks = this._get(STORAGE_KEYS.TASKS, []);
+        this._set(STORAGE_KEYS.TASKS, tasks.filter(t => t.id !== id));
+        return { ok: true };
     },
 
     async getTemplates() {
-        return this.api('/api/templates');
+        return this._get(STORAGE_KEYS.TEMPLATES, DEFAULT_TEMPLATES);
     },
 
     async addTemplate(template) {
-        return this.api('/api/templates', {
-            method: 'POST',
-            body: JSON.stringify(template)
-        });
+        const templates = this._get(STORAGE_KEYS.TEMPLATES, DEFAULT_TEMPLATES);
+        templates.push(template);
+        this._set(STORAGE_KEYS.TEMPLATES, templates);
+        return template;
     },
 
     async updateTemplate(id, updates) {
-        return this.api(`/api/templates/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(updates)
-        });
+        const templates = this._get(STORAGE_KEYS.TEMPLATES, DEFAULT_TEMPLATES);
+        const index = templates.findIndex(t => t.id === id);
+        if (index === -1) throw new Error('Not found');
+        templates[index] = { ...templates[index], ...updates };
+        this._set(STORAGE_KEYS.TEMPLATES, templates);
+        return templates[index];
     },
 
     async deleteTemplate(id) {
-        return this.api(`/api/templates/${id}`, { method: 'DELETE' });
+        const templates = this._get(STORAGE_KEYS.TEMPLATES, DEFAULT_TEMPLATES);
+        this._set(STORAGE_KEYS.TEMPLATES, templates.filter(t => t.id !== id));
+        return { ok: true };
     },
 
     async getSettings() {
-        const data = await this.api('/api/settings');
-        return { ...DEFAULT_SETTINGS, ...data };
+        const saved = this._get(STORAGE_KEYS.SETTINGS, {});
+        return { ...DEFAULT_SETTINGS, ...saved };
     },
 
     async saveSettings(settings) {
-        return this.api('/api/settings', {
-            method: 'PUT',
-            body: JSON.stringify(settings)
-        });
+        const current = this._get(STORAGE_KEYS.SETTINGS, {});
+        const merged = { ...current, ...settings };
+        this._set(STORAGE_KEYS.SETTINGS, merged);
+        return merged;
     },
 
     async getPointsLogs() {
-        return this.api('/api/points-logs');
+        return this._get(STORAGE_KEYS.POINTS_LOGS, []);
     },
 
     async addPointsLog(log) {
-        return this.api('/api/points-logs', {
-            method: 'POST',
-            body: JSON.stringify(log)
-        });
+        const logs = this._get(STORAGE_KEYS.POINTS_LOGS, []);
+        logs.push(log);
+        this._set(STORAGE_KEYS.POINTS_LOGS, logs);
+        return log;
     },
 
     async getTotalPoints() {
-        const data = await this.api('/api/points/total');
-        return data.total;
+        const logs = this._get(STORAGE_KEYS.POINTS_LOGS, []);
+        return logs.reduce((sum, log) => sum + log.points, 0);
     },
 
     async getRewards() {
-        return this.api('/api/rewards');
+        return this._get(STORAGE_KEYS.REWARDS, DEFAULT_REWARDS).sort((a, b) => a.cost - b.cost);
     },
 
     async addReward(reward) {
-        return this.api('/api/rewards', {
-            method: 'POST',
-            body: JSON.stringify(reward)
-        });
+        const rewards = this._get(STORAGE_KEYS.REWARDS, DEFAULT_REWARDS);
+        rewards.push(reward);
+        this._set(STORAGE_KEYS.REWARDS, rewards);
+        return reward;
     },
 
     async updateReward(id, updates) {
-        return this.api(`/api/rewards/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(updates)
-        });
+        const rewards = this._get(STORAGE_KEYS.REWARDS, DEFAULT_REWARDS);
+        const index = rewards.findIndex(r => r.id === id);
+        if (index === -1) throw new Error('Not found');
+        rewards[index] = { ...rewards[index], ...updates };
+        this._set(STORAGE_KEYS.REWARDS, rewards);
+        return rewards[index];
     },
 
     async deleteReward(id) {
-        return this.api(`/api/rewards/${id}`, { method: 'DELETE' });
+        const rewards = this._get(STORAGE_KEYS.REWARDS, DEFAULT_REWARDS);
+        this._set(STORAGE_KEYS.REWARDS, rewards.filter(r => r.id !== id));
+        return { ok: true };
     }
 };
 
