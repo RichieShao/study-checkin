@@ -489,6 +489,45 @@ html, body {
 .manager-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .manager-name { font-size: 15px; font-weight: 700; color: var(--c-text); }
 .manager-meta { font-size: 12px; color: var(--c-text-3); }
+
+/* === 任务模板 / 任务列表 差异化样式 === */
+.section-head-wrap { display: flex; flex-direction: column; gap: 4px; }
+.section-head-top { display: flex; align-items: center; justify-content: space-between; }
+.section-head-left { display: flex; align-items: center; gap: 10px; }
+.section-icon-badge {
+  width: 32px; height: 32px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.section-icon-badge.template { background: var(--c-tag-blue-bg); }
+.section-icon-badge.today { background: var(--c-tag-green-bg); }
+.section-subtitle { font-size: 12px; color: var(--c-text-3); font-weight: 500; }
+
+/* 模板卡片 - 蓝色系，浅底 + 左侧色条 */
+.template-card {
+  background: #F5F7FF !important;
+  border-left: 4px solid var(--c-blue-light);
+}
+.role-badge {
+  font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 6px;
+  flex-shrink: 0; letter-spacing: 0.5px;
+}
+.role-badge.tpl {
+  background: var(--c-tag-blue-border);
+  color: var(--c-blue);
+}
+.role-badge.today {
+  background: var(--c-tag-green-border);
+  color: var(--c-green);
+}
+
+/* 今日任务卡片 - 白底 + 左侧绿色色条 */
+.today-task-card {
+  background: #FFFFFF;
+  border-left: 4px solid var(--c-green-light);
+}
+
 .toggle {
   width: 44px; height: 26px; background: #DFE6E9;
   border-radius: 13px; position: relative;
@@ -743,7 +782,7 @@ html, body {
               <circle cx="14" cy="14" r="10.5" fill="#FDCB6E" stroke="#E17055" stroke-width="1.5"/>
               <circle cx="14" cy="14" r="5.25" stroke="#E17055" stroke-width="1.5" fill="none"/>
             </svg>
-            <span class="points-label">所得积分</span>
+            <span class="points-label">今天所得积分</span>
           </div>
           <span class="points-value" id="kid-points">0</span>
         </div>
@@ -833,9 +872,15 @@ html, body {
         </section>
 
         <section class="parent-page" id="parent-templates">
-          <div class="section-header">
-            <h3 style="font-size:22px;font-weight:700;" id="template-title">任务模板（0 个）</h3>
-            <button class="btn-primary" id="btn-add-template">+ 新增模板</button>
+          <div class="section-head-wrap">
+            <div class="section-head-top">
+              <div class="section-head-left">
+                <div class="section-icon-badge template">📋</div>
+                <h3 style="font-size:22px;font-weight:700;" id="template-title">任务模板（0 个）</h3>
+              </div>
+              <button class="btn-primary" id="btn-add-template">+ 新增模板</button>
+            </div>
+            <div class="section-subtitle">默认任务蓝本，每天自动生成今日任务（改模板只影响以后）</div>
           </div>
           <div class="template-list" id="template-list"></div>
         </section>
@@ -849,9 +894,14 @@ html, body {
         </section>
 
         <section class="parent-page" id="parent-tasks">
-          <div class="section-header">
-            <h3 style="font-size:22px;font-weight:700;" id="ptasks-title">任务列表（0 个）</h3>
-            <button class="btn-primary" id="btn-add-ptask">+ 新增任务</button>
+          <div class="section-head-wrap">
+            <div class="section-head-top">
+              <div class="section-head-left">
+                <div class="section-icon-badge today">✅</div>
+                <h3 style="font-size:22px;font-weight:700;" id="ptasks-title">任务列表（0 个）</h3>
+              </div>
+            </div>
+            <div class="section-subtitle" id="ptasks-subtitle">今天的实际任务，孩子可打卡完成（只影响今天）</div>
           </div>
           <div class="manager-list" id="ptasks-list"></div>
         </section>
@@ -962,7 +1012,7 @@ document.getElementById('modal-overlay').addEventListener('click', function(e) {
 });
 
 // ============== 数据层 ==============
-const STORAGE_KEY = 'study_tracker_v3';
+const STORAGE_KEY = 'study_tracker_v4';
 
 // 科目颜色映射
 const SUBJECT_COLORS = ['red','blue','green','purple','orange','pink'];
@@ -1056,16 +1106,44 @@ function initTodayTasks() {
   if (APP.dailyTasks[d] && APP.dailyTasks[d].length > 0) return;
   // 从模板创建今日任务
   APP.dailyTasks[d] = APP.templates.map(t => ({
-    id: uid(),
-    subject: t.subject,
-    type: t.type,
-    title: t.title,
-    duration: t.duration,
-    points: t.points,
-    completed: false,
-    enabled: true
+    id: uid(), subject: t.subject, type: t.type, title: t.title,
+    duration: t.duration, points: t.points, completed: false, enabled: true,
+    _tplId: t.id
   }));
   saveData();
+}
+
+// 模板增删改后，同步今日任务（保留已完成/已停用状态）
+function syncTodayFromTemplates() {
+  const d = today();
+  if (!APP.dailyTasks[d]) APP.dailyTasks[d] = [];
+  const tasks = APP.dailyTasks[d];
+  // 删除：移除对应模板已被删的任务
+  const tplIds = new Set(APP.templates.map(t => t.id));
+  for (let i = tasks.length - 1; i >= 0; i--) {
+    if (tasks[i]._tplId && !tplIds.has(tasks[i]._tplId)) tasks.splice(i, 1);
+  }
+  // 新增/更新：根据模板同步
+  APP.templates.forEach(tpl => {
+    const existing = tasks.find(tk => tk._tplId === tpl.id);
+    if (existing) {
+      // 同步模板的科目、类型、标题、时长、积分（保留完成和启用状态）
+      existing.subject = tpl.subject;
+      existing.type = tpl.type;
+      existing.title = tpl.title;
+      existing.duration = tpl.duration;
+      existing.points = tpl.points;
+    } else {
+      // 模板新增的任务，追加到今日任务
+      tasks.push({
+        id: uid(), subject: tpl.subject, type: tpl.type, title: tpl.title,
+        duration: tpl.duration, points: tpl.points, completed: false, enabled: true,
+        _tplId: tpl.id
+      });
+    }
+  });
+  saveData();
+  renderPTasks(); renderTasks(); renderPomodoroTaskSelect();
 }
 
 // ============== 倒计时 ==============
@@ -1093,8 +1171,8 @@ function updateCountdown() {
 
 // ============== 积分显示 ==============
 function updatePointsDisplay() {
-  // 显示累计获得积分
-  document.getElementById('kid-points').textContent = getEarnedPoints();
+  // 显示今天所得积分
+  document.getElementById('kid-points').textContent = getTodayEarnedPoints();
 }
 
 // ============== 打卡天数 ==============
@@ -1447,19 +1525,25 @@ function getEarnedPoints() {
   APP.pointsLog.forEach(l => { if (l.amount > 0) total += l.amount; });
   return total;
 }
+function getTodayEarnedPoints() {
+  let total = 0;
+  const todayStr = today();
+  APP.pointsLog.forEach(l => { if (l.amount > 0 && l.time && l.time.slice(0, 10) === todayStr) total += l.amount; });
+  return total;
+}
 function getSpentPoints() {
   let total = 0;
   APP.pointsLog.forEach(l => { if (l.amount < 0) total += Math.abs(l.amount); });
   return total;
 }
 function renderShop() {
-  // 积分信息栏：所得积分 + 可用积分
-  const earned = getEarnedPoints();
+  // 积分信息栏：今天所得积分 + 累计可用积分
+  const earned = getTodayEarnedPoints();
   const available = APP.points;
   const info = document.getElementById('shop-points-info');
   info.innerHTML =
-    '<div class="pts-card earned"><span class="pts-label">所得积分</span><span class="pts-value">' + earned + '</span></div>' +
-    '<div class="pts-card avail"><span class="pts-label">可用积分</span><span class="pts-value">' + available + '</span></div>';
+    '<div class="pts-card earned"><span class="pts-label">今天所得积分</span><span class="pts-value">' + earned + '</span></div>' +
+    '<div class="pts-card avail"><span class="pts-label">累计可用积分</span><span class="pts-value">' + available + '</span></div>';
 
   const grid = document.getElementById('shop-grid');
   grid.innerHTML = '';
@@ -1508,10 +1592,10 @@ function renderOverview() {
   }
   const rate = totalTasks > 0 ? Math.round(totalCompleted / totalTasks * 100) : 0;
   let totalEarned2 = 0;
-  APP.pointsLog.forEach(l => { if (l.amount > 0) totalEarned2 += l.amount; });
+  totalEarned2 = getTodayEarnedPoints();
 
   document.getElementById('stats-row').innerHTML =
-    '<div class="stat-card"><div class="stat-value blue">' + totalEarned2 + '</div><div class="stat-label">\u6240\u5F97\u79EF\u5206</div></div>' +
+    '<div class="stat-card"><div class="stat-value blue">' + totalEarned2 + '</div><div class="stat-label">\u4ECA\u5929\u6240\u5F97\u79EF\u5206</div></div>' +
     '<div class="stat-card"><div class="stat-value green">' + streak + '</div><div class="stat-label">\u8FDE\u7EED\u6253\u5361\u5929\u6570</div></div>' +
     '<div class="stat-card"><div class="stat-value orange">' + rate + '%</div><div class="stat-label">\u603B\u5B8C\u6210\u7387</div></div>' +
     '<div class="stat-card"><div class="stat-value" style="color:var(--c-text);">' + tasks.length + '</div><div class="stat-label">\u4EFB\u52A1\u603B\u6570</div></div>';
@@ -1603,6 +1687,7 @@ function renderTemplates() {
     card.className = 'template-card';
     const color = getSubjectColor(t.subject);
     card.innerHTML =
+      '<span class="role-badge tpl">模板</span>' +
       '<span class="template-dot" style="background:var(--c-' + color + ');"></span>' +
       '<div class="template-info"><div class="template-name">' + t.title + '</div><div class="template-meta">' + t.type + ' \u00B7 ' + t.duration + ' \u5206\u949F \u00B7 +' + t.points + '\u5206</div></div>' +
       '<div class="template-actions">' +
@@ -1635,6 +1720,7 @@ function renderTemplates() {
       saveData();
       showToast('\u6A21\u677F\u5DF2\u5220\u9664', '\u{1F5D1}');
       renderTemplates();
+      syncTodayFromTemplates();
     });
   });
 }
@@ -1659,6 +1745,7 @@ function editTemplate(id) {
     t.points = parseInt(document.getElementById('f-points').value) || 15;
     saveData(); closeModal();
     renderTemplates();
+    syncTodayFromTemplates();
     showToast('\u6A21\u677F\u5DF2\u66F4\u65B0', '\u{2705}');
   });
 }
@@ -1684,6 +1771,7 @@ document.getElementById('btn-add-template').addEventListener('click', function()
     });
     saveData(); closeModal();
     renderTemplates();
+    syncTodayFromTemplates();
     showToast('\u6A21\u677F\u5DF2\u6DFB\u52A0', '\u{2705}');
   });
 });
@@ -1767,6 +1855,7 @@ document.getElementById('btn-add-reward').addEventListener('click', function() {
 function renderPTasks() {
   const tasks = getTodayTasks();
   document.getElementById('ptasks-title').textContent = '\u4EFB\u52A1\u5217\u8868\uFF08' + tasks.length + ' \u4E2A\uFF09';
+  document.getElementById('ptasks-subtitle').textContent = fmtDate(today()) + '\uFF0C\u4ECA\u5929\u7684\u5B9E\u9645\u4EFB\u52A1\uFF0C\u5B69\u5B50\u53EF\u6253\u5361\u5B8C\u6210\uFF08\u53EA\u5F71\u54CD\u4ECA\u5929\uFF09';
   const el = document.getElementById('ptasks-list');
   el.innerHTML = '';
   if (tasks.length === 0) {
@@ -1776,17 +1865,13 @@ function renderPTasks() {
   tasks.forEach(t => {
     const color = getSubjectColor(t.subject);
     const card = document.createElement('div');
-    card.className = 'manager-card';
+    card.className = 'manager-card today-task-card';
     card.innerHTML =
+      '<span class="role-badge today">\u4ECA\u65E5</span>' +
       '<div class="manager-icon ' + color + '"><span style="font-size:20px;color:#fff;">\u{1F4DD}</span></div>' +
       '<div class="manager-info"><div class="manager-name">' + t.title + '</div><div class="manager-meta">' + t.subject + ' \u00B7 ' + t.duration + ' \u5206\u949F' + (t.completed ? ' \u00B7 \u5DF2\u5B8C\u6210' : '') + '</div></div>' +
       '<span class="tag tag-points">+' + t.points + '</span>' +
-      '<div class="toggle' + (t.enabled !== false ? ' on' : '') + '" data-id="' + t.id + '"></div>' +
-      '<div class="template-actions" style="margin-left:6px;">' +
-        '<button class="btn-edit" data-id="' + t.id + '">\u7F16\u8F91</button>' +
-        '<button class="btn-delete" data-id="' + t.id + '">\u5220\u9664</button>' +
-      '</div>' +
-      '<div class="confirm-bar" id="ptc-' + t.id + '"><span class="confirm-text">\u786E\u5B9A\u5220\u9664\uFF1F</span><button class="confirm-no" data-ptcancel="' + t.id + '">\u53D6\u6D88</button><button class="confirm-yes" data-ptconfirm="' + t.id + '">\u5220\u9664</button></div>';
+      '<div class="toggle' + (t.enabled !== false ? ' on' : '') + '" data-id="' + t.id + '"></div>';
     el.appendChild(card);
   });
 
@@ -1801,70 +1886,7 @@ function renderPTasks() {
       }
     });
   });
-  el.querySelectorAll('.btn-edit[data-id]').forEach(btn => {
-    btn.addEventListener('click', function() { editPTask(this.dataset.id); });
-  });
-  el.querySelectorAll('.btn-delete[data-id]').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.getElementById('ptc-' + this.dataset.id).classList.add('active');
-    });
-  });
-  el.querySelectorAll('[data-ptcancel]').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.getElementById('ptc-' + this.dataset.ptcancel).classList.remove('active');
-    });
-  });
-  el.querySelectorAll('[data-ptconfirm]').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const id = this.dataset.ptconfirm;
-      const tasks = getTodayTasks();
-      const idx = tasks.findIndex(t => t.id === id);
-      if (idx >= 0) { tasks.splice(idx, 1); saveData(); showToast('\u4EFB\u52A1\u5DF2\u5220\u9664', '\u{1F5D1}'); renderPTasks(); renderTasks(); renderPomodoroTaskSelect(); }
-    });
-  });
 }
-
-function editPTask(id) {
-  const t = getTodayTasks().find(x => x.id === id);
-  if (!t) return;
-  const subjectOpts = APP.subjects.map(s => '<option value="' + s.name + '"' + (s.name === t.subject ? ' selected' : '') + '>' + s.name + '</option>').join('');
-  const typeOpts = APP.types.map(tp => '<option value="' + tp.name + '"' + (tp.name === t.type ? ' selected' : '') + '>' + tp.name + '</option>').join('');
-  const body =
-    '<div class="form-group"><label class="form-label">\u79D1\u76EE</label><select class="form-select" id="f-subject">' + subjectOpts + '</select></div>' +
-    '<div class="form-group"><label class="form-label">\u7C7B\u578B</label><select class="form-select" id="f-type">' + typeOpts + '</select></div>' +
-    '<div class="form-group"><label class="form-label">\u4EFB\u52A1\u6807\u9898</label><input class="form-input" id="f-title" value="' + t.title + '"></div>' +
-    '<div class="form-row"><div class="form-group"><label class="form-label">\u65F6\u957F\uFF08\u5206\u949F\uFF09</label><input class="form-input" id="f-duration" type="number" value="' + t.duration + '" min="1"></div><div class="form-group"><label class="form-label">\u79EF\u5206</label><input class="form-input" id="f-points" type="number" value="' + t.points + '" min="1"></div></div>';
-  showModal('\u7F16\u8F91\u4EFB\u52A1', body, function() {
-    const title = document.getElementById('f-title').value.trim();
-    if (!title) { showToast('\u8BF7\u8F93\u5165\u6807\u9898', '\u{26A0}'); return; }
-    t.subject = document.getElementById('f-subject').value;
-    t.type = document.getElementById('f-type').value;
-    t.title = title;
-    t.duration = parseInt(document.getElementById('f-duration').value) || 15;
-    t.points = parseInt(document.getElementById('f-points').value) || 15;
-    saveData(); closeModal();
-    renderPTasks(); renderTasks(); renderPomodoroTaskSelect();
-    showToast('\u4EFB\u52A1\u5DF2\u66F4\u65B0', '\u{2705}');
-  });
-}
-
-document.getElementById('btn-add-ptask').addEventListener('click', function() {
-  const subjectOpts = APP.subjects.map(s => '<option value="' + s.name + '">' + s.name + '</option>').join('');
-  const typeOpts = APP.types.map(t => '<option value="' + t.name + '">' + t.name + '</option>').join('');
-  const body =
-    '<div class="form-group"><label class="form-label">\u79D1\u76EE</label><select class="form-select" id="f-subject">' + subjectOpts + '</select></div>' +
-    '<div class="form-group"><label class="form-label">\u7C7B\u578B</label><select class="form-select" id="f-type">' + typeOpts + '</select></div>' +
-    '<div class="form-group"><label class="form-label">\u4EFB\u52A1\u6807\u9898</label><input class="form-input" id="f-title" placeholder="\u8BF7\u8F93\u5165\u4EFB\u52A1\u6807\u9898"></div>' +
-    '<div class="form-row"><div class="form-group"><label class="form-label">\u65F6\u957F\uFF08\u5206\u949F\uFF09</label><input class="form-input" id="f-duration" type="number" value="15" min="1"></div><div class="form-group"><label class="form-label">\u79EF\u5206</label><input class="form-input" id="f-points" type="number" value="15" min="1"></div></div>';
-  showModal('\u65B0\u589E\u4EFB\u52A1', body, function() {
-    const title = document.getElementById('f-title').value.trim();
-    if (!title) { showToast('\u8BF7\u8F93\u5165\u6807\u9898', '\u{26A0}'); return; }
-    getTodayTasks().push({ id: uid(), subject: document.getElementById('f-subject').value, type: document.getElementById('f-type').value, title, duration: parseInt(document.getElementById('f-duration').value) || 15, points: parseInt(document.getElementById('f-points').value) || 15, completed: false, enabled: true });
-    saveData(); closeModal();
-    renderPTasks(); renderTasks(); renderPomodoroTaskSelect();
-    showToast('\u4EFB\u52A1\u5DF2\u6DFB\u52A0', '\u{2705}');
-  });
-});
 
 // ============== 家长模式 - 科目管理 ==============
 function renderSubjects() {
@@ -1990,11 +2012,12 @@ document.getElementById('btn-add-type').addEventListener('click', function() {
 function renderPointsLog() {
   let totalEarned = 0, totalSpent = 0;
   APP.pointsLog.forEach(l => { if (l.amount > 0) totalEarned += l.amount; else totalSpent += Math.abs(l.amount); });
+  const todayEarned = getTodayEarnedPoints();
 
   document.getElementById('points-stats').innerHTML =
-    '<div class="points-stat"><div class="value blue">' + totalEarned + '</div><div class="label">\u6240\u5F97\u79EF\u5206</div></div>' +
-    '<div class="points-stat"><div class="value green">' + totalEarned + '</div><div class="label">\u7D2F\u8BA1\u83B7\u5F97</div></div>' +
-    '<div class="points-stat"><div class="value orange">' + totalSpent + '</div><div class="label">\u7D2F\u8BA1\u6D88\u8D39</div></div>' +
+    '<div class="points-stat"><div class="value blue">' + todayEarned + '</div><div class="label">今天所得积分</div></div>' +
+    '<div class="points-stat"><div class="value green">' + totalEarned + '</div><div class="label">累计获得</div></div>' +
+    '<div class="points-stat"><div class="value orange">' + totalSpent + '</div><div class="label">累计消费</div></div>' +
     '<div class="points-stat"><div class="value" style="color:var(--c-text);">' + APP.pointsLog.length + '</div><div class="label">\u8BB0\u5F55\u603B\u6570</div></div>';
 
   const el = document.getElementById('points-log-list');
