@@ -3,22 +3,26 @@ const STORAGE_KEYS = {
     TEMPLATES: 'study_checkin_templates',
     SETTINGS: 'study_checkin_settings',
     POINTS_LOGS: 'study_checkin_points_logs',
-    REWARDS: 'study_checkin_rewards'
+    REWARDS: 'study_checkin_rewards',
+    SUBJECTS: 'study_checkin_subjects',
+    TASK_TYPES: 'study_checkin_task_types'
 };
 
 const FULL_ATTENDANCE_BONUS = 30;
 
-const SUBJECTS = {
-    chinese: { name: '语文', tagClass: 'tag-chinese' },
-    math: { name: '数学', tagClass: 'tag-math' },
-    english: { name: '英语', tagClass: 'tag-english' }
-};
+const DEFAULT_SUBJECTS = [
+    { id: 'chinese', name: '语文', color: '#ff7675' },
+    { id: 'math', name: '数学', color: '#74b9ff' },
+    { id: 'english', name: '英语', color: '#55efc4' }
+];
 
-const TASK_TYPES = {
-    exercise: '练习题',
-    vocabulary: '背单词',
-    recitation: '背课文'
-};
+const DEFAULT_TASK_TYPES = [
+    { id: 'exercise', name: '练习题' },
+    { id: 'vocabulary', name: '背单词' },
+    { id: 'recitation', name: '背课文' }
+];
+
+const PRESET_COLORS = ['#ff7675', '#74b9ff', '#55efc4', '#ffeaa7', '#a29bfe', '#fd79a8', '#00b894', '#fdcb6e', '#e17055', '#6c5ce7'];
 
 const DEFAULT_SETTINGS = {
     examDate: '2026-09-01',
@@ -186,6 +190,58 @@ const Storage = {
         const rewards = this._get(STORAGE_KEYS.REWARDS, DEFAULT_REWARDS);
         this._set(STORAGE_KEYS.REWARDS, rewards.filter(r => r.id !== id));
         return { ok: true };
+    },
+
+    async getSubjects() {
+        return this._get(STORAGE_KEYS.SUBJECTS, DEFAULT_SUBJECTS);
+    },
+
+    async addSubject(subject) {
+        const subjects = this._get(STORAGE_KEYS.SUBJECTS, DEFAULT_SUBJECTS);
+        subjects.push(subject);
+        this._set(STORAGE_KEYS.SUBJECTS, subjects);
+        return subject;
+    },
+
+    async updateSubject(id, updates) {
+        const subjects = this._get(STORAGE_KEYS.SUBJECTS, DEFAULT_SUBJECTS);
+        const index = subjects.findIndex(s => s.id === id);
+        if (index === -1) throw new Error('Not found');
+        subjects[index] = { ...subjects[index], ...updates };
+        this._set(STORAGE_KEYS.SUBJECTS, subjects);
+        return subjects[index];
+    },
+
+    async deleteSubject(id) {
+        const subjects = this._get(STORAGE_KEYS.SUBJECTS, DEFAULT_SUBJECTS);
+        this._set(STORAGE_KEYS.SUBJECTS, subjects.filter(s => s.id !== id));
+        return { ok: true };
+    },
+
+    async getTaskTypes() {
+        return this._get(STORAGE_KEYS.TASK_TYPES, DEFAULT_TASK_TYPES);
+    },
+
+    async addTaskType(taskType) {
+        const taskTypes = this._get(STORAGE_KEYS.TASK_TYPES, DEFAULT_TASK_TYPES);
+        taskTypes.push(taskType);
+        this._set(STORAGE_KEYS.TASK_TYPES, taskTypes);
+        return taskType;
+    },
+
+    async updateTaskType(id, updates) {
+        const taskTypes = this._get(STORAGE_KEYS.TASK_TYPES, DEFAULT_TASK_TYPES);
+        const index = taskTypes.findIndex(t => t.id === id);
+        if (index === -1) throw new Error('Not found');
+        taskTypes[index] = { ...taskTypes[index], ...updates };
+        this._set(STORAGE_KEYS.TASK_TYPES, taskTypes);
+        return taskTypes[index];
+    },
+
+    async deleteTaskType(id) {
+        const taskTypes = this._get(STORAGE_KEYS.TASK_TYPES, DEFAULT_TASK_TYPES);
+        this._set(STORAGE_KEYS.TASK_TYPES, taskTypes.filter(t => t.id !== id));
+        return { ok: true };
     }
 };
 
@@ -193,6 +249,8 @@ const App = {
     currentMode: 'kid',
     currentParentTab: 'overview',
     currentKidTab: 'tasks',
+    _subjects: [],
+    _taskTypes: [],
     pomodoro: {
         workDuration: 25,
         breakDuration: 5,
@@ -237,6 +295,8 @@ const App = {
     },
 
      async render() {
+        this._subjects = await Storage.getSubjects();
+        this._taskTypes = await Storage.getTaskTypes();
         const main = document.getElementById('mainContent');
         if (this.currentMode === 'kid') {
             main.innerHTML = await this.renderKidMode();
@@ -245,6 +305,14 @@ const App = {
             main.innerHTML = await this.renderParentMode();
             this.bindParentModeEvents();
         }
+    },
+
+    getSubjectById(id) {
+        return this._subjects.find(s => s.id === id) || { name: '未知', color: '#999' };
+    },
+
+    getTaskTypeById(id) {
+        return this._taskTypes.find(t => t.id === id) || { name: '未知' };
     },
 
      async renderKidMode() {
@@ -310,8 +378,8 @@ const App = {
     },
 
     renderTaskItem(task) {
-        const subject = SUBJECTS[task.subject];
-        const typeName = TASK_TYPES[task.type];
+        const subject = this.getSubjectById(task.subject);
+        const typeObj = this.getTaskTypeById(task.type);
         const points = task.duration || 0;
 
         return `
@@ -320,8 +388,8 @@ const App = {
                 <div class="task-content">
                     <div class="task-title">${this.escapeHtml(task.title)}</div>
                     <div class="task-tags">
-                        <span class="tag ${subject.tagClass}">${subject.name}</span>
-                        <span class="tag tag-type">${typeName}</span>
+                        <span class="tag" style="background: ${subject.color}22; color: ${subject.color}; border-color: ${subject.color}66;">${subject.name}</span>
+                        <span class="tag tag-type">${typeObj.name}</span>
                         ${task.duration ? `<span class="tag tag-duration">⏱ ${task.duration} 分钟</span>` : ''}
                         ${points > 0 ? `<span class="tag tag-points">💰 +${points}分</span>` : ''}
                     </div>
@@ -407,7 +475,7 @@ const App = {
                         <option value="">-- 不关联任务 --</option>
                         ${incompleteTasks.map(t => `
                             <option value="${t.id}" ${t.id === p.linkedTaskId ? 'selected' : ''}>
-                                ${this.escapeHtml(t.title)} (${SUBJECTS[t.subject].name})
+                                ${this.escapeHtml(t.title)} (${this.getSubjectById(t.subject).name})
                             </option>
                         `).join('')}
                     </select>
@@ -717,6 +785,8 @@ const App = {
      async openAddTaskModal() {
         const templates = await Storage.getTemplates();
         const today = formatDate(new Date());
+        const subjects = this._subjects;
+        const taskTypes = this._taskTypes;
 
         document.getElementById('modalTitle').textContent = '添加任务';
         document.getElementById('modalBody').innerHTML = `
@@ -737,36 +807,24 @@ const App = {
             <div class="form-group">
                 <label class="form-label">科目<span class="required">*</span></label>
                 <div class="radio-group">
-                    <div class="radio-item subject-chinese">
-                        <input type="radio" name="subject" id="subChinese" value="chinese">
-                        <label for="subChinese">语文</label>
-                    </div>
-                    <div class="radio-item subject-math">
-                        <input type="radio" name="subject" id="subMath" value="math">
-                        <label for="subMath">数学</label>
-                    </div>
-                    <div class="radio-item subject-english">
-                        <input type="radio" name="subject" id="subEnglish" value="english">
-                        <label for="subEnglish">英语</label>
-                    </div>
+                    ${subjects.map((s, idx) => `
+                        <div class="radio-item">
+                            <input type="radio" name="subject" id="sub${idx}" value="${s.id}">
+                            <label for="sub${idx}" style="border-color: ${s.color}44; color: ${s.color};">${s.name}</label>
+                        </div>
+                    `).join('')}
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="form-label">任务类型<span class="required">*</span></label>
                 <div class="radio-group">
-                    <div class="radio-item">
-                        <input type="radio" name="taskType" id="typeExercise" value="exercise">
-                        <label for="typeExercise">练习题</label>
-                    </div>
-                    <div class="radio-item">
-                        <input type="radio" name="taskType" id="typeVocab" value="vocabulary">
-                        <label for="typeVocab">背单词</label>
-                    </div>
-                    <div class="radio-item">
-                        <input type="radio" name="taskType" id="typeRecite" value="recitation">
-                        <label for="typeRecite">背课文</label>
-                    </div>
+                    ${taskTypes.map((t, idx) => `
+                        <div class="radio-item">
+                            <input type="radio" name="taskType" id="type${idx}" value="${t.id}">
+                            <label for="type${idx}">${t.name}</label>
+                        </div>
+                    `).join('')}
                 </div>
             </div>
 
@@ -849,12 +907,14 @@ const App = {
     },
 
      async renderParentMode() {
-        const [overviewHtml, historyHtml, templatesHtml, rewardsHtml, pointsHtml] = await Promise.all([
+        const [overviewHtml, historyHtml, templatesHtml, rewardsHtml, pointsHtml, subjectsHtml, taskTypesHtml] = await Promise.all([
             this.renderOverviewTab(),
             this.renderHistoryTab(),
             this.renderTemplatesTab(),
             this.renderRewardsTab(),
-            this.renderPointsLogTab()
+            this.renderPointsLogTab(),
+            this.renderSubjectsTab(),
+            this.renderTaskTypesTab()
         ]);
         return `
             <div class="parent-tabs">
@@ -862,6 +922,8 @@ const App = {
                 <button class="parent-tab ${this.currentParentTab === 'history' ? 'active' : ''}" data-tab="history">历史记录</button>
                 <button class="parent-tab ${this.currentParentTab === 'templates' ? 'active' : ''}" data-tab="templates">任务模板</button>
                 <button class="parent-tab ${this.currentParentTab === 'rewards' ? 'active' : ''}" data-tab="rewards">奖品管理</button>
+                <button class="parent-tab ${this.currentParentTab === 'subjects' ? 'active' : ''}" data-tab="subjects">科目管理</button>
+                <button class="parent-tab ${this.currentParentTab === 'taskTypes' ? 'active' : ''}" data-tab="taskTypes">任务类型</button>
                 <button class="parent-tab ${this.currentParentTab === 'points' ? 'active' : ''}" data-tab="points">积分流水</button>
             </div>
 
@@ -879,6 +941,14 @@ const App = {
 
             <div class="parent-tab-content ${this.currentParentTab === 'rewards' ? '' : 'hidden'}" id="tabRewards">
                 ${rewardsHtml}
+            </div>
+
+            <div class="parent-tab-content ${this.currentParentTab === 'subjects' ? '' : 'hidden'}" id="tabSubjects">
+                ${subjectsHtml}
+            </div>
+
+            <div class="parent-tab-content ${this.currentParentTab === 'taskTypes' ? '' : 'hidden'}" id="tabTaskTypes">
+                ${taskTypesHtml}
             </div>
 
             <div class="parent-tab-content ${this.currentParentTab === 'points' ? '' : 'hidden'}" id="tabPoints">
@@ -901,11 +971,11 @@ const App = {
         const streak = await this.calculateStreak();
         const totalPoints = await Storage.getTotalPoints();
 
-        const subjectStats = {
-            chinese: tasks.filter(t => t.subject === 'chinese').length,
-            math: tasks.filter(t => t.subject === 'math').length,
-            english: tasks.filter(t => t.subject === 'english').length
-        };
+        const subjects = this._subjects;
+        const subjectStats = {};
+        subjects.forEach(s => {
+            subjectStats[s.id] = tasks.filter(t => t.subject === s.id).length;
+        });
         const maxSubjectCount = Math.max(1, ...Object.values(subjectStats));
 
         const weekData = await this.getWeekData();
@@ -932,14 +1002,14 @@ const App = {
 
             <div class="subject-stats">
                 <div class="subject-stats-title">各科任务分布</div>
-                ${Object.entries(SUBJECTS).map(([key, val]) => `
+                ${subjects.map(s => `
                     <div class="subject-bar">
                         <div class="subject-bar-header">
-                            <span class="subject-bar-name">${val.name}</span>
-                            <span class="subject-bar-count">${subjectStats[key]} 个任务</span>
+                            <span class="subject-bar-name">${s.name}</span>
+                            <span class="subject-bar-count">${subjectStats[s.id]} 个任务</span>
                         </div>
                         <div class="subject-bar-track">
-                            <div class="subject-bar-fill ${key}" style="width: ${(subjectStats[key] / maxSubjectCount) * 100}%"></div>
+                            <div class="subject-bar-fill" style="width: ${(subjectStats[s.id] / maxSubjectCount) * 100}%; background: ${s.color};"></div>
                         </div>
                     </div>
                 `).join('')}
@@ -1024,15 +1094,15 @@ const App = {
                 ${templates.length > 0 ? `
                     <div class="template-list">
                         ${templates.map(tpl => {
-                            const subject = SUBJECTS[tpl.subject];
-                            const typeName = TASK_TYPES[tpl.type];
+                            const subject = this.getSubjectById(tpl.subject);
+                            const typeObj = this.getTaskTypeById(tpl.type);
                             return `
                                 <div class="template-item" data-id="${tpl.id}">
                                     <div class="template-item-info">
                                         <div class="template-item-title">${this.escapeHtml(tpl.title)}</div>
                                         <div class="template-item-meta">
-                                            <span class="tag ${subject.tagClass}">${subject.name}</span>
-                                            <span class="tag tag-type">${typeName}</span>
+                                            <span class="tag" style="background: ${subject.color}22; color: ${subject.color}; border-color: ${subject.color}66;">${subject.name}</span>
+                                            <span class="tag tag-type">${typeObj.name}</span>
                                             ${tpl.duration ? `<span class="tag tag-duration">⏱ ${tpl.duration} 分钟</span>` : ''}
                                         </div>
                                     </div>
@@ -1084,6 +1154,77 @@ const App = {
                     <div class="empty-state">
                         <div class="empty-state-icon">🎁</div>
                         <div class="empty-state-text">还没有奖品，点击"新增奖品"来添加</div>
+                    </div>
+                `}
+            </div>
+        `;
+    },
+
+     async renderSubjectsTab() {
+        const subjects = this._subjects;
+        const presetColors = PRESET_COLORS;
+
+        return `
+            <div class="templates-section">
+                <div class="templates-header">
+                    <div class="templates-title">科目管理（${subjects.length} 个）</div>
+                    <button class="template-add-btn" id="addSubjectBtn">＋ 新增科目</button>
+                </div>
+
+                ${subjects.length > 0 ? `
+                    <div class="subject-manage-list">
+                        ${subjects.map(s => `
+                            <div class="subject-manage-item" data-id="${s.id}">
+                                <div class="subject-manage-color" style="background: ${s.color};"></div>
+                                <div class="subject-manage-info">
+                                    <div class="subject-manage-name">${this.escapeHtml(s.name)}</div>
+                                </div>
+                                <div class="template-item-actions">
+                                    <button class="template-action-btn edit" data-action="edit-subject">编辑</button>
+                                    <button class="template-action-btn delete" data-action="delete-subject">删除</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📚</div>
+                        <div class="empty-state-text">还没有科目，点击"新增科目"来添加</div>
+                    </div>
+                `}
+            </div>
+        `;
+    },
+
+     async renderTaskTypesTab() {
+        const taskTypes = this._taskTypes;
+
+        return `
+            <div class="templates-section">
+                <div class="templates-header">
+                    <div class="templates-title">任务类型（${taskTypes.length} 个）</div>
+                    <button class="template-add-btn" id="addTaskTypeBtn">＋ 新增类型</button>
+                </div>
+
+                ${taskTypes.length > 0 ? `
+                    <div class="tasktype-manage-list">
+                        ${taskTypes.map(t => `
+                            <div class="tasktype-manage-item" data-id="${t.id}">
+                                <div class="tasktype-manage-icon">📋</div>
+                                <div class="tasktype-manage-info">
+                                    <div class="tasktype-manage-name">${this.escapeHtml(t.name)}</div>
+                                </div>
+                                <div class="template-item-actions">
+                                    <button class="template-action-btn edit" data-action="edit-tasktype">编辑</button>
+                                    <button class="template-action-btn delete" data-action="delete-tasktype">删除</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <div class="empty-state-text">还没有任务类型，点击"新增类型"来添加</div>
                     </div>
                 `}
             </div>
@@ -1218,6 +1359,46 @@ const App = {
                 }
             });
         });
+
+        const addSubBtn = document.getElementById('addSubjectBtn');
+        if (addSubBtn) {
+            addSubBtn.addEventListener('click', () => this.openSubjectModal());
+        }
+
+        document.querySelectorAll('.subject-manage-item').forEach(item => {
+            const subId = item.dataset.id;
+            const editBtn = item.querySelector('[data-action="edit-subject"]');
+            const deleteBtn = item.querySelector('[data-action="delete-subject"]');
+
+            editBtn.addEventListener('click', () => this.openSubjectModal(subId));
+            deleteBtn.addEventListener('click', async () => {
+                if (confirm('删除科目后，已有任务的科目会显示为"未知"。确定要删除吗？')) {
+                    await Storage.deleteSubject(subId);
+                    this.render();
+                    this.showToast('科目已删除', 'success');
+                }
+            });
+        });
+
+        const addTTBtn = document.getElementById('addTaskTypeBtn');
+        if (addTTBtn) {
+            addTTBtn.addEventListener('click', () => this.openTaskTypeModal());
+        }
+
+        document.querySelectorAll('.tasktype-manage-item').forEach(item => {
+            const ttId = item.dataset.id;
+            const editBtn = item.querySelector('[data-action="edit-tasktype"]');
+            const deleteBtn = item.querySelector('[data-action="delete-tasktype"]');
+
+            editBtn.addEventListener('click', () => this.openTaskTypeModal(ttId));
+            deleteBtn.addEventListener('click', async () => {
+                if (confirm('删除任务类型后，已有任务的类型会显示为"未知"。确定要删除吗？')) {
+                    await Storage.deleteTaskType(ttId);
+                    this.render();
+                    this.showToast('任务类型已删除', 'success');
+                }
+            });
+        });
     },
 
      async openRewardModal(rwdId = null) {
@@ -1292,9 +1473,121 @@ const App = {
         this.render();
     },
 
+     async openSubjectModal(subjectId = null) {
+        const subjects = this._subjects;
+        const subject = subjectId ? subjects.find(s => s.id === subjectId) : null;
+        const presetColors = PRESET_COLORS;
+
+        document.getElementById('modalTitle').textContent = subject ? '编辑科目' : '新增科目';
+        document.getElementById('modalBody').innerHTML = `
+            <div class="form-group">
+                <label class="form-label">科目名称<span class="required">*</span></label>
+                <input type="text" class="form-input" id="subjectName" placeholder="例如：物理" value="${subject ? this.escapeHtml(subject.name) : ''}">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">选择颜色<span class="required">*</span></label>
+                <div class="color-picker">
+                    ${presetColors.map((c, idx) => `
+                        <div class="color-option ${subject && subject.color === c ? 'selected' : ''}" data-color="${c}" style="background: ${c};" title="${c}"></div>
+                    `).join('')}
+                </div>
+                <input type="hidden" id="subjectColor" value="${subject ? subject.color : presetColors[0]}">
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn-secondary" id="subjectCancelBtn">取消</button>
+                <button class="btn btn-primary" id="subjectSaveBtn">保存</button>
+            </div>
+        `;
+
+        document.querySelectorAll('.color-option').forEach(opt => {
+            opt.addEventListener('click', () => {
+                document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+                document.getElementById('subjectColor').value = opt.dataset.color;
+            });
+        });
+
+        document.getElementById('subjectCancelBtn').addEventListener('click', () => this.closeModal());
+        document.getElementById('subjectSaveBtn').addEventListener('click', () => this.saveSubject(subjectId));
+
+        this.showModal();
+    },
+
+     async saveSubject(subjectId) {
+        const name = document.getElementById('subjectName').value.trim();
+        const color = document.getElementById('subjectColor').value;
+
+        if (!name) {
+            alert('请输入科目名称');
+            return;
+        }
+        if (!color) {
+            alert('请选择颜色');
+            return;
+        }
+
+        if (subjectId) {
+            await Storage.updateSubject(subjectId, { name, color });
+            this.showToast('科目已更新', 'success');
+        } else {
+            await Storage.addSubject({ id: generateId(), name, color });
+            this.showToast('科目已添加', 'success');
+        }
+
+        this.closeModal();
+        this.render();
+    },
+
+     async openTaskTypeModal(typeId = null) {
+        const taskTypes = this._taskTypes;
+        const tt = typeId ? taskTypes.find(t => t.id === typeId) : null;
+
+        document.getElementById('modalTitle').textContent = tt ? '编辑任务类型' : '新增任务类型';
+        document.getElementById('modalBody').innerHTML = `
+            <div class="form-group">
+                <label class="form-label">类型名称<span class="required">*</span></label>
+                <input type="text" class="form-input" id="taskTypeName" placeholder="例如：做实验" value="${tt ? this.escapeHtml(tt.name) : ''}">
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn-secondary" id="taskTypeCancelBtn">取消</button>
+                <button class="btn btn-primary" id="taskTypeSaveBtn">保存</button>
+            </div>
+        `;
+
+        document.getElementById('taskTypeCancelBtn').addEventListener('click', () => this.closeModal());
+        document.getElementById('taskTypeSaveBtn').addEventListener('click', () => this.saveTaskType(typeId));
+
+        this.showModal();
+    },
+
+     async saveTaskType(typeId) {
+        const name = document.getElementById('taskTypeName').value.trim();
+
+        if (!name) {
+            alert('请输入类型名称');
+            return;
+        }
+
+        if (typeId) {
+            await Storage.updateTaskType(typeId, { name });
+            this.showToast('任务类型已更新', 'success');
+        } else {
+            await Storage.addTaskType({ id: generateId(), name });
+            this.showToast('任务类型已添加', 'success');
+        }
+
+        this.closeModal();
+        this.render();
+    },
+
      async openTemplateModal(tplId = null) {
         const templates = await Storage.getTemplates();
         const tpl = tplId ? templates.find(t => t.id === tplId) : null;
+        const subjects = this._subjects;
+        const taskTypes = this._taskTypes;
 
         document.getElementById('modalTitle').textContent = tpl ? '编辑模板' : '新增模板';
         document.getElementById('modalBody').innerHTML = `
@@ -1306,36 +1599,24 @@ const App = {
             <div class="form-group">
                 <label class="form-label">科目<span class="required">*</span></label>
                 <div class="radio-group">
-                    <div class="radio-item subject-chinese">
-                        <input type="radio" name="tplSubject" id="tplChinese" value="chinese" ${tpl && tpl.subject === 'chinese' ? 'checked' : ''}>
-                        <label for="tplChinese">语文</label>
-                    </div>
-                    <div class="radio-item subject-math">
-                        <input type="radio" name="tplSubject" id="tplMath" value="math" ${tpl && tpl.subject === 'math' ? 'checked' : ''}>
-                        <label for="tplMath">数学</label>
-                    </div>
-                    <div class="radio-item subject-english">
-                        <input type="radio" name="tplSubject" id="tplEnglish" value="english" ${tpl && tpl.subject === 'english' ? 'checked' : ''}>
-                        <label for="tplEnglish">英语</label>
-                    </div>
+                    ${subjects.map((s, idx) => `
+                        <div class="radio-item">
+                            <input type="radio" name="tplSubject" id="tplSub${idx}" value="${s.id}" ${tpl && tpl.subject === s.id ? 'checked' : ''}>
+                            <label for="tplSub${idx}" style="border-color: ${s.color}44; color: ${s.color};">${s.name}</label>
+                        </div>
+                    `).join('')}
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="form-label">任务类型<span class="required">*</span></label>
                 <div class="radio-group">
-                    <div class="radio-item">
-                        <input type="radio" name="tplType" id="tplExercise" value="exercise" ${tpl && tpl.type === 'exercise' ? 'checked' : ''}>
-                        <label for="tplExercise">练习题</label>
-                    </div>
-                    <div class="radio-item">
-                        <input type="radio" name="tplType" id="tplVocab" value="vocabulary" ${tpl && tpl.type === 'vocabulary' ? 'checked' : ''}>
-                        <label for="tplVocab">背单词</label>
-                    </div>
-                    <div class="radio-item">
-                        <input type="radio" name="tplType" id="tplRecite" value="recitation" ${tpl && tpl.type === 'recitation' ? 'checked' : ''}>
-                        <label for="tplRecite">背课文</label>
-                    </div>
+                    ${taskTypes.map((t, idx) => `
+                        <div class="radio-item">
+                            <input type="radio" name="tplType" id="tplType${idx}" value="${t.id}" ${tpl && tpl.type === t.id ? 'checked' : ''}>
+                            <label for="tplType${idx}">${t.name}</label>
+                        </div>
+                    `).join('')}
                 </div>
             </div>
 
