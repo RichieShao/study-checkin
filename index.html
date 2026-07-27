@@ -946,7 +946,7 @@ html, body {
 
 // ============== 工具函数 ==============
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
-function today() { return new Date().toISOString().slice(0, 10); }
+function today() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
 function now() { return new Date().toISOString(); }
 function fmtDate(d) {
   const dt = new Date(d);
@@ -968,7 +968,9 @@ function fmtDateTime(iso) {
   return mm + '-' + dd + ' ' + hh + ':' + mi;
 }
 function daysBetween(d1, d2) {
-  return Math.ceil((new Date(d2) - new Date(d1)) / 86400000);
+  const a = new Date(d1 + 'T00:00:00');
+  const b = new Date(d2 + 'T00:00:00');
+  return Math.round((b - a) / 86400000);
 }
 
 // ============== Toast ==============
