@@ -947,7 +947,11 @@ html, body {
 // ============== 工具函数 ==============
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
 function today() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
-function now() { return new Date().toISOString(); }
+function now() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0')
+    + 'T' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0') + ':' + String(d.getSeconds()).padStart(2,'0');
+}
 function fmtDate(d) {
   const dt = new Date(d + 'T12:00:00');
   const m = dt.getMonth() + 1;
@@ -956,7 +960,7 @@ function fmtDate(d) {
   return dt.getFullYear() + '年 ' + m + '月' + day + '日 周' + weekdays[dt.getDay()];
 }
 function fmtDateShort(d) {
-  const dt = new Date(d + 'T12:00:00');
+  const dt = new Date(d);
   return (dt.getMonth()+1) + '/' + dt.getDate();
 }
 function fmtDateTime(iso) {
