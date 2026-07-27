@@ -328,7 +328,8 @@ const App = {
             <div class="countdown-card">
                 <div class="countdown-date">${formatDisplayDate(today)}</div>
                 <div class="countdown-days">${this.calculateDaysUntilExam(settings.examDate)}</div>
-                <div class="countdown-label">距离开学分班考还有</div>
+                <div class="countdown-label">${settings.countdownLabel || '距离开学分班考还有'}</div>
+                ${this.currentMode === 'parent' ? `<button class="countdown-edit" id="editCountdownBtn" title="编辑目标日期">✏️ 编辑</button>` : ''}
             </div>
 
             <div class="points-bar">
@@ -545,6 +546,11 @@ const App = {
         });
 
         this.bindPomodoroEvents();
+
+        const editCountdownBtn = document.getElementById('editCountdownBtn');
+        if (editCountdownBtn) {
+            editCountdownBtn.addEventListener('click', () => this.openSettingsModal());
+        }
     },
 
     bindPomodoroEvents() {
@@ -1579,6 +1585,51 @@ const App = {
             this.showToast('任务类型已添加', 'success');
         }
 
+        this.closeModal();
+        this.render();
+    },
+
+     async openSettingsModal() {
+        const settings = await Storage.getSettings();
+
+        document.getElementById('modalTitle').textContent = '设置目标日期';
+        document.getElementById('modalBody').innerHTML = `
+            <div class="form-group">
+                <label class="form-label">考试/目标日期<span class="required">*</span></label>
+                <input type="date" class="form-input" id="examDateInput" value="${settings.examDate || '2026-09-01'}">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">倒计时标题</label>
+                <input type="text" class="form-input" id="countdownLabel" placeholder="例如：距离开学分班考还有" value="${settings.countdownLabel || '距离开学分班考还有'}">
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn-secondary" id="settingsCancelBtn">取消</button>
+                <button class="btn btn-primary" id="settingsSaveBtn">保存</button>
+            </div>
+        `;
+
+        document.getElementById('settingsCancelBtn').addEventListener('click', () => this.closeModal());
+        document.getElementById('settingsSaveBtn').addEventListener('click', () => this.saveSettingsFromModal());
+
+        this.showModal();
+    },
+
+     async saveSettingsFromModal() {
+        const examDate = document.getElementById('examDateInput').value;
+        const countdownLabel = document.getElementById('countdownLabel').value.trim();
+
+        if (!examDate) {
+            alert('请选择目标日期');
+            return;
+        }
+
+        await Storage.saveSettings({ 
+            examDate, 
+            countdownLabel: countdownLabel || '距离开学分班考还有' 
+        });
+        this.showToast('设置已保存', 'success');
         this.closeModal();
         this.render();
     },
