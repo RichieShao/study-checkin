@@ -976,6 +976,7 @@ const App = {
 
         const streak = await this.calculateStreak();
         const totalPoints = await Storage.getTotalPoints();
+        const settings = await Storage.getSettings();
 
         const subjects = this._subjects;
         const subjectStats = {};
@@ -987,6 +988,13 @@ const App = {
         const weekData = await this.getWeekData();
 
         return `
+            <div class="countdown-card">
+                <div class="countdown-date">${formatDisplayDate(today)}</div>
+                <div class="countdown-days">${this.calculateDaysUntilExam(settings.examDate)}</div>
+                <div class="countdown-label">${settings.countdownLabel || '距离开学分班考还有'}</div>
+                <button class="countdown-edit" id="editCountdownBtn" title="编辑目标日期">✏️ 编辑</button>
+            </div>
+
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-value primary">${totalPoints}</div>
@@ -1405,6 +1413,11 @@ const App = {
                 }
             });
         });
+
+        const editCountdownBtn = document.getElementById('editCountdownBtn');
+        if (editCountdownBtn) {
+            editCountdownBtn.addEventListener('click', () => this.openSettingsModal());
+        }
     },
 
      async openRewardModal(rwdId = null) {
