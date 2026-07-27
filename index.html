@@ -630,19 +630,53 @@ html, body {
   padding: 6px 16px; border-radius: 12px; cursor: pointer;
 }
 
-/* Task select in pomodoro */
-.task-select-bar {
-  display: flex; flex-wrap: wrap; gap: 8px; width: 100%; justify-content: center;
+/* Task select popover in pomodoro */
+.linked-task-chip {
+  cursor: pointer;
+  transition: all .2s;
+  position: relative;
 }
-.task-select-chip {
-  height: 33px; border-radius: 12px; background: #F0F0F0;
-  border: 2px solid transparent;
-  display: inline-flex; align-items: center;
-  padding: 0 14px; font-size: 13px; font-weight: 600; color: var(--c-text-2);
-  cursor: pointer; transition: all .2s;
+.linked-task-chip:hover { filter: brightness(0.96); }
+.linked-task-chip::after {
+  content: "▾";
+  font-size: 12px;
+  margin-left: 8px;
+  opacity: 0.6;
 }
-.task-select-chip.selected {
-  background: #D0ECFF; border-color: var(--c-blue); color: var(--c-blue);
+.task-select-popover {
+  display: none;
+  position: relative;
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: var(--r-md);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  border: 1px solid var(--c-border);
+  padding: 8px;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 20;
+  animation: popoverIn .2s ease;
+}
+.task-select-popover.show { display: flex; }
+@keyframes popoverIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.task-select-popover .popover-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 10px;
+  font-size: 14px; font-weight: 600; color: var(--c-text);
+  cursor: pointer; transition: background .15s;
+}
+.task-select-popover .popover-item:hover { background: #F5F5FF; }
+.task-select-popover .popover-item.selected { background: #D0ECFF; color: var(--c-blue); }
+.task-select-popover .popover-item .check {
+  margin-left: auto; color: var(--c-blue); font-size: 16px; font-weight: 700;
+  display: none;
+}
+.task-select-popover .popover-item.selected .check { display: block; }
+.task-select-popover .popover-empty {
+  padding: 14px; text-align: center; font-size: 13px; color: var(--c-text-4);
 }
 
 /* Empty state */
@@ -734,7 +768,7 @@ html, body {
               </div>
             </div>
             <div class="linked-task-chip" id="pomo-linked-task">未关联任务</div>
-            <div class="task-select-bar" id="pomo-task-select"></div>
+            <div class="task-select-popover" id="pomo-task-popover"></div>
             <div class="pomodoro-controls">
               <button class="btn-pink-grad" id="pomo-toggle">开始专注</button>
               <button class="btn-grey-grad" id="pomo-reset">重置</button>
@@ -1277,31 +1311,55 @@ function updatePomoDisplay() {
 }
 
 function renderPomodoroTaskSelect() {
-  const bar = document.getElementById('pomo-task-select');
+  const popover = document.getElementById('pomo-task-popover');
   const tasks = getTodayTasks().filter(t => !t.completed && t.enabled !== false);
-  bar.innerHTML = '';
+  popover.innerHTML = '';
   if (tasks.length === 0) {
-    bar.style.display = 'none';
+    const empty = document.createElement('div');
+    empty.className = 'popover-empty';
+    empty.textContent = '暂无可关联的未完成任务';
+    popover.appendChild(empty);
     return;
   }
-  bar.style.display = 'flex';
+  // 清除关联选项
+  const clearItem = document.createElement('div');
+  clearItem.className = 'popover-item' + (!pomoState.linkedTaskId ? ' selected' : '');
+  clearItem.innerHTML = '<span>不关联任务</span><span class="check">✓</span>';
+  clearItem.addEventListener('click', function() {
+    pomoState.linkedTaskId = null;
+    popover.classList.remove('show');
+    updatePomoDisplay();
+  });
+  popover.appendChild(clearItem);
+
   tasks.forEach(t => {
-    const chip = document.createElement('div');
-    chip.className = 'task-select-chip' + (pomoState.linkedTaskId === t.id ? ' selected' : '');
-    chip.textContent = t.title;
-    chip.addEventListener('click', function() {
-      bar.querySelectorAll('.task-select-chip').forEach(c => c.classList.remove('selected'));
-      if (pomoState.linkedTaskId === t.id) {
-        pomoState.linkedTaskId = null;
-      } else {
-        pomoState.linkedTaskId = t.id;
-        this.classList.add('selected');
-      }
+    const item = document.createElement('div');
+    item.className = 'popover-item' + (pomoState.linkedTaskId === t.id ? ' selected' : '');
+    item.innerHTML = '<span>' + t.title + '</span><span class="check">✓</span>';
+    item.addEventListener('click', function() {
+      pomoState.linkedTaskId = t.id;
+      popover.classList.remove('show');
       updatePomoDisplay();
     });
-    bar.appendChild(chip);
+    popover.appendChild(item);
   });
 }
+
+// 关联任务 chip 点击切换弹出菜单
+document.getElementById('pomo-linked-task').addEventListener('click', function() {
+  const popover = document.getElementById('pomo-task-popover');
+  renderPomodoroTaskSelect();
+  popover.classList.toggle('show');
+});
+
+// 点击其他区域关闭弹出菜单
+document.addEventListener('click', function(e) {
+  const popover = document.getElementById('pomo-task-popover');
+  const chip = document.getElementById('pomo-linked-task');
+  if (popover.classList.contains('show') && !popover.contains(e.target) && !chip.contains(e.target)) {
+    popover.classList.remove('show');
+  }
+});
 
 function togglePomo() {
   const btn = document.getElementById('pomo-toggle');
@@ -1316,6 +1374,8 @@ function togglePomo() {
       if (pomoState.remaining <= 0) {
         clearInterval(pomoState.timer);
         pomoState.running = false;
+        // 震动提示
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
         if (pomoState.mode === 'focus') {
           // 完成一个番茄
           APP.pomodoroCount[today()] = (APP.pomodoroCount[today()] || 0) + 1;
