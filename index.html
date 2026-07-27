@@ -953,7 +953,7 @@ function fmtDate(d) {
   const m = dt.getMonth() + 1;
   const day = dt.getDate();
   const weekdays = ['日','一','二','三','四','五','六'];
-  return m + '月' + day + '日 周' + weekdays[dt.getDay()];
+  return dt.getFullYear() + '年 ' + m + '月' + day + '日 周' + weekdays[dt.getDay()];
 }
 function fmtDateShort(d) {
   const dt = new Date(d + 'T12:00:00');
@@ -1152,21 +1152,19 @@ function syncTodayFromTemplates() {
 function updateCountdown() {
   const target = APP.settings.countdownTarget;
   const label = APP.settings.countdownLabel || '距离开学分班考还有';
-  const d = new Date();
-  const todayStr = (d.getMonth()+1) + '月' + d.getDate() + '日';
   const remaining = Math.max(0, daysBetween(today(), target));
   // kid
   const kidDate = document.getElementById('kid-countdown-date');
   const kidDays = document.getElementById('kid-countdown-days');
   const kidLabel = document.querySelector('#kid-countdown .countdown-label');
-  if (kidDate) kidDate.textContent = todayStr + ' ' + fmtDate(today());
+  if (kidDate) kidDate.textContent = fmtDate(today());
   if (kidDays) kidDays.textContent = remaining;
   if (kidLabel) kidLabel.textContent = label;
   // parent
   const pDate = document.getElementById('parent-countdown-date');
   const pDays = document.getElementById('parent-countdown-days');
   const pLabel = document.querySelector('#parent-countdown .countdown-label');
-  if (pDate) pDate.textContent = todayStr + ' ' + fmtDate(today());
+  if (pDate) pDate.textContent = fmtDate(today());
   if (pDays) pDays.textContent = remaining;
   if (pLabel) pLabel.textContent = label;
 }
