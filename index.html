@@ -7,7 +7,6 @@
 <style>
 /* ============== 基础重置与变量 ============== */
 :root {
-  /* 色彩系统 */
   --c-orange: #E17055;
   --c-orange-light: #FAB1A0;
   --c-orange-deep: #FFA06B;
@@ -43,19 +42,13 @@
   --c-tag-pink-border: rgba(253,121,168,0.4);
   --c-disabled: #DFE6E9;
   --c-disabled-2: #B2BEC3;
-
-  /* 圆角 */
   --r-sm: 12px;
   --r-md: 16px;
   --r-lg: 20px;
   --r-xl: 24px;
-
-  /* 字体 */
   --ff: "Sarasa Gothic SC", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
 html, body {
   font-family: var(--ff);
   color: var(--c-text);
@@ -64,8 +57,6 @@ html, body {
   min-height: 100%;
   overflow-x: hidden;
 }
-
-/* ============== 响应式容器 ============== */
 .stage {
   width: 100%;
   min-height: 100vh;
@@ -75,7 +66,6 @@ html, body {
   align-items: center;
   background: #E8E8EE;
 }
-
 .app {
   width: 100%;
   max-width: 480px;
@@ -86,21 +76,11 @@ html, body {
   min-height: 100vh;
   min-height: 100dvh;
 }
-
 @media (min-width: 481px) {
   .stage { padding: 20px 0; justify-content: center; }
-  .app {
-    border-radius: 28px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-    min-height: auto;
-  }
+  .app { border-radius: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); min-height: auto; }
 }
-
-.app-inner {
-  /* 自然流式布局，由 body 原生滚动 */
-}
-
-/* ============== Header 通用 ============== */
+.app-inner {}
 .header {
   height: 75px;
   background: linear-gradient(135deg, #FFEDD8 0%, #FCB6A0 100%);
@@ -115,63 +95,30 @@ html, body {
   top: 0;
   z-index: 100;
 }
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
+.logo { display: flex; align-items: center; gap: 10px; }
 .logo svg { width: 30px; height: 30px; flex-shrink: 0; }
-
-.logo-text {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--c-orange);
-}
-
+.logo-text { font-size: 22px; font-weight: 700; color: var(--c-orange); }
 .mode-switch {
-  display: flex;
-  align-items: center;
+  display: flex; align-items: center;
   background: rgba(255,255,255,0.7);
   border: 1px solid #FFFFFF;
   border-radius: 20px;
-  padding: 5px;
-  gap: 0;
+  padding: 5px; gap: 0;
 }
-
 .mode-switch button {
-  border: none;
-  background: transparent;
-  font-family: var(--ff);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--c-text-3);
-  padding: 0 18px;
-  height: 37px;
-  border-radius: 16px;
-  cursor: pointer;
-  transition: all .25s ease;
-  white-space: nowrap;
+  border: none; background: transparent;
+  font-family: var(--ff); font-size: 14px; font-weight: 600;
+  color: var(--c-text-3); padding: 0 18px; height: 37px;
+  border-radius: 16px; cursor: pointer;
+  transition: all .25s ease; white-space: nowrap;
 }
-
 .mode-switch button.active {
   background: linear-gradient(135deg, #74B9FF 0%, #0984E3 100%);
   color: #FFFFFF;
   box-shadow: 0 3px 10px rgba(9,132,227,0.4);
 }
-
-/* ============== 内容容器 ============== */
-.mode-content {
-  display: none;
-  padding: 24px;
-  flex-direction: column;
-  gap: 20px;
-}
-
+.mode-content { display: none; padding: 24px; flex-direction: column; gap: 20px; }
 .mode-content.active { display: flex; }
-
-/* ============== 倒计时卡片 ============== */
 .countdown-card {
   background: linear-gradient(135deg, #A29BFE 0%, #6C5CE7 100%);
   border: 1px solid #FFFFFF;
@@ -182,874 +129,390 @@ html, body {
   box-shadow: 0 8px 24px rgba(108,92,231,0.3);
   position: relative;
 }
-
-.countdown-date {
-  font-size: 15px;
-  font-weight: 400;
-  margin-bottom: 0;
-}
-
-.countdown-days {
-  font-size: 56px;
-  font-weight: 700;
-  line-height: 1;
-  margin: 8px 0;
-}
-
-.countdown-label {
-  font-size: 17px;
-  font-weight: 400;
-}
-
+.countdown-date { font-size: 15px; font-weight: 400; margin-bottom: 0; }
+.countdown-days { font-size: 56px; font-weight: 700; line-height: 1; margin: 8px 0; }
+.countdown-label { font-size: 17px; font-weight: 400; }
 .edit-btn {
-  position: absolute;
-  top: 18px;
-  right: 18px;
+  position: absolute; top: 18px; right: 18px;
   background: rgba(255,255,255,0.25);
   border: 1px solid rgba(255,255,255,0.45);
   color: #FFFFFF;
-  font-family: var(--ff);
-  font-size: 12px;
-  padding: 5px 14px;
-  border-radius: 12px;
-  cursor: pointer;
+  font-family: var(--ff); font-size: 12px;
+  padding: 5px 14px; border-radius: 12px; cursor: pointer;
 }
-
-/* ============== 积分栏 ============== */
 .points-bar {
   background: linear-gradient(135deg, #FFF5CC 0%, #FFE0A6 100%);
   border: 1px solid #FFFFFF;
   border-radius: var(--r-lg);
   padding: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   box-shadow: 0 4px 12px rgba(241,177,65,0.4);
 }
-
 .points-left { display: flex; align-items: center; gap: 10px; }
 .points-left svg { width: 28px; height: 28px; }
 .points-label { font-size: 15px; font-weight: 600; color: #886600; }
 .points-value { font-size: 32px; font-weight: 700; color: var(--c-orange); }
-
-/* ============== Tab 通用 ============== */
-.tabs {
-  display: flex;
-  gap: 10px;
-}
-
+.tabs { display: flex; gap: 10px; }
 .tabs button {
-  flex: 1;
-  height: 46px;
-  border-radius: var(--r-md);
-  border: 1px solid #FFFFFF;
-  background: #FFFFFF;
-  font-family: var(--ff);
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--c-text-3);
-  cursor: pointer;
+  flex: 1; height: 46px; border-radius: var(--r-md);
+  border: 1px solid #FFFFFF; background: #FFFFFF;
+  font-family: var(--ff); font-size: 15px; font-weight: 700;
+  color: var(--c-text-3); cursor: pointer;
   transition: all .25s ease;
   box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
-
 .tabs button.active {
   background: linear-gradient(135deg, #FD79A8 0%, #A29BFE 100%);
-  color: #FFFFFF;
-  border-color: #FFFFFF;
+  color: #FFFFFF; border-color: #FFFFFF;
   box-shadow: 0 6px 16px rgba(108,92,231,0.4);
 }
-
-/* ============== 家长 Tabs (3列网格) ============== */
 .parent-tabs {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  background: #FFFFFF;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 6px; background: #FFFFFF;
   border: 1px solid #FFFFFF;
   border-radius: var(--r-lg);
   padding: 6px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-
 .parent-tabs button {
-  height: 39px;
-  border-radius: 12px;
-  border: none;
+  height: 39px; border-radius: 12px; border: none;
   background: transparent;
-  font-family: var(--ff);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--c-text-3);
-  cursor: pointer;
+  font-family: var(--ff); font-size: 12px; font-weight: 600;
+  color: var(--c-text-3); cursor: pointer;
   transition: all .25s ease;
 }
-
 .parent-tabs button.active {
   background: linear-gradient(135deg, #A29BFE 0%, #6C5CE7 100%);
-  color: #FFFFFF;
-  font-weight: 700;
+  color: #FFFFFF; font-weight: 700;
 }
-
-/* ============== 区段标题 ============== */
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 34px;
-}
-
-.section-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--c-text);
-}
-
-/* ============== 通用按钮 ============== */
+.section-header { display: flex; align-items: center; justify-content: space-between; height: 34px; }
+.section-title { font-size: 20px; font-weight: 700; color: var(--c-text); }
 .btn-primary {
   background: linear-gradient(135deg, #A29BFE 0%, #6C5CE7 100%);
-  color: #FFFFFF;
-  border: none;
-  font-family: var(--ff);
-  font-weight: 700;
-  cursor: pointer;
-  border-radius: 17px;
-  padding: 0 18px;
-  height: 34px;
-  font-size: 14px;
+  color: #FFFFFF; border: none;
+  font-family: var(--ff); font-weight: 700; cursor: pointer;
+  border-radius: 17px; padding: 0 18px; height: 34px; font-size: 14px;
 }
-
 .btn-purple-grad {
   background: linear-gradient(135deg, #FD79A8 0%, #A29BFE 100%);
-  color: #FFFFFF;
-  border: none;
-  font-family: var(--ff);
-  font-weight: 700;
-  cursor: pointer;
-  border-radius: 14px;
-  height: 37px;
-  font-size: 14px;
+  color: #FFFFFF; border: none;
+  font-family: var(--ff); font-weight: 700; cursor: pointer;
+  border-radius: 14px; height: 37px; font-size: 14px;
 }
-
 .btn-pink-grad {
   background: linear-gradient(135deg, #FF7675 0%, #E84393 100%);
-  color: #FFFFFF;
-  border: none;
-  font-family: var(--ff);
-  font-weight: 700;
-  cursor: pointer;
-  border-radius: 16px;
-  height: 53px;
-  font-size: 17px;
-  flex: 1;
+  color: #FFFFFF; border: none;
+  font-family: var(--ff); font-weight: 700; cursor: pointer;
+  border-radius: 16px; height: 53px; font-size: 17px; flex: 1;
 }
-
 .btn-grey-grad {
   background: linear-gradient(135deg, #DFE6E9 0%, #B2BEC3 100%);
-  color: #2D3436;
-  border: none;
-  font-family: var(--ff);
-  font-weight: 700;
-  cursor: pointer;
-  border-radius: 16px;
-  height: 53px;
-  font-size: 17px;
-  flex: 1;
+  color: #2D3436; border: none;
+  font-family: var(--ff); font-weight: 700; cursor: pointer;
+  border-radius: 16px; height: 53px; font-size: 17px; flex: 1;
 }
-
-/* ============== 连胜徽章 ============== */
 .streak-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  display: flex; align-items: center; gap: 6px;
   background: linear-gradient(135deg, #FFF5CC 0%, #FFE0A6 100%);
   border: 1px solid #FFFFFF;
   border-radius: var(--r-lg);
   padding: 8px 14px;
   box-shadow: 0 4px 12px rgba(241,177,65,0.4);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--c-red);
+  font-size: 14px; font-weight: 700; color: var(--c-red);
 }
 .streak-badge svg { width: 18px; height: 18px; }
-
-/* ============== 任务列表 ============== */
 .task-list { display: flex; flex-direction: column; gap: 14px; }
-
 .task-card {
-  background: #FFFFFF;
-  border: 1px solid #FFFFFF;
+  background: #FFFFFF; border: 1px solid #FFFFFF;
   border-radius: var(--r-lg);
   padding: 18px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  display: flex; align-items: center; gap: 14px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: background .3s;
 }
-
 .task-card.completed {
   background: linear-gradient(135deg, #E8F5E8 0%, #F0FFF0 100%);
 }
-
-.checkbox {
-  width: 32px;
-  height: 32px;
-  border-radius: 16px;
-  border: 1px solid #DFE6E9;
-  background: #FFFFFF;
-  flex-shrink: 0;
-  position: relative;
-  cursor: pointer;
+.task-card.completing {
+  animation: taskComplete .5s ease;
 }
-
+@keyframes taskComplete {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+.checkbox {
+  width: 32px; height: 32px; border-radius: 16px;
+  border: 1px solid #DFE6E9; background: #FFFFFF;
+  flex-shrink: 0; position: relative; cursor: pointer;
+  transition: all .25s;
+}
 .checkbox.checked {
   background: linear-gradient(135deg, #55EFC4 0%, #00B894 100%);
   border-color: #00B894;
   box-shadow: 0 3px 8px rgba(0,184,148,0.4);
 }
-
 .checkbox.checked::after {
-  content: "✓";
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #FFFFFF;
-  font-size: 18px;
-  font-weight: 700;
+  content: "✓"; position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: #FFFFFF; font-size: 18px; font-weight: 700;
 }
-
-.task-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-}
-
-.task-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--c-text);
-}
-
+.task-content { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.task-title { font-size: 16px; font-weight: 600; color: var(--c-text); }
 .task-card.completed .task-title { color: var(--c-text-3); }
-
 .tags { display: flex; flex-wrap: wrap; gap: 8px; }
-
 .tag {
-  height: 23px;
-  border-radius: 14px;
-  font-family: var(--ff);
-  font-size: 12px;
-  padding: 0 12px;
-  display: inline-flex;
-  align-items: center;
-  font-weight: 600;
+  height: 23px; border-radius: 14px;
+  font-family: var(--ff); font-size: 12px; padding: 0 12px;
+  display: inline-flex; align-items: center; font-weight: 600;
 }
-
 .tag-yellow { background: var(--c-tag-yellow-bg); border: 1px solid var(--c-tag-yellow-border); color: var(--c-yellow-deep); }
 .tag-green { background: var(--c-tag-green-bg); border: 1px solid var(--c-tag-green-border); color: var(--c-green); }
 .tag-red { background: var(--c-tag-red-bg); border: 1px solid var(--c-tag-red-border); color: var(--c-red); }
 .tag-blue { background: var(--c-tag-blue-bg); border: 1px solid var(--c-tag-blue-border); color: var(--c-blue); }
 .tag-purple { background: var(--c-tag-purple-bg); border: 1px solid var(--c-tag-purple-border); color: var(--c-purple); }
 .tag-pink { background: var(--c-tag-pink-bg); border: 1px solid var(--c-tag-pink-border); color: var(--c-pink); }
-
-.tag-points {
-  background: var(--c-tag-yellow-bg);
-  border: 1px solid var(--c-tag-yellow-border);
-  color: var(--c-yellow-deep);
-}
-
+.tag-points { background: var(--c-tag-yellow-bg); border: 1px solid var(--c-tag-yellow-border); color: var(--c-yellow-deep); }
 .delete-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: #FFE0E6;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  font-family: var(--ff);
-  font-size: 20px;
-  font-weight: 700;
-  color: #E84393;
+  width: 40px; height: 40px; border-radius: 12px;
+  background: #FFE0E6; border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+  font-family: var(--ff); font-size: 20px; font-weight: 700; color: #E84393;
 }
-
-/* ============== 添加任务按钮 ============== */
 .add-task-btn {
-  width: 100%;
-  height: 55px;
-  border-radius: 18px;
-  background: #FFFFFF;
-  border: 2px dashed var(--c-blue);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%; height: 55px; border-radius: 18px;
+  background: #FFFFFF; border: 2px dashed var(--c-blue);
+  display: flex; align-items: center; justify-content: center;
   gap: 10px;
-  font-family: var(--ff);
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--c-blue);
-  cursor: pointer;
+  font-family: var(--ff); font-size: 16px; font-weight: 600;
+  color: var(--c-blue); cursor: pointer;
 }
-
-/* ============== 页面切换 ============== */
 .page { display: none; flex-direction: column; gap: 20px; }
 .page.active { display: flex; }
-
-/* ============== 番茄钟 ============== */
 .pomodoro-card {
   background: linear-gradient(135deg, #FFF5F5 0%, #FFE4E4 100%);
   border: 1px solid #FFFFFF;
   border-radius: var(--r-xl);
   padding: 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 22px;
+  display: flex; flex-direction: column; align-items: center; gap: 22px;
 }
-
 .pomodoro-mode-switch {
-  display: flex;
-  gap: 8px;
+  display: flex; gap: 8px;
   background: rgba(255,255,255,0.7);
   border: 1px solid #FFFFFF;
-  border-radius: 18px;
-  padding: 6px;
-  width: 100%;
+  border-radius: 18px; padding: 6px; width: 100%;
 }
-
 .pomodoro-mode-switch button {
-  flex: 1;
-  height: 46px;
-  border-radius: 14px;
-  border: none;
-  font-family: var(--ff);
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--c-text-3);
-  background: transparent;
-  cursor: pointer;
-  transition: all .25s ease;
+  flex: 1; height: 46px; border-radius: 14px; border: none;
+  font-family: var(--ff); font-size: 15px; font-weight: 700;
+  color: var(--c-text-3); background: transparent;
+  cursor: pointer; transition: all .25s ease;
 }
-
 .pomodoro-mode-switch button.active {
   background: linear-gradient(135deg, #FF7675 0%, #E84393 100%);
   color: #FFFFFF;
 }
-
 .timer-ring {
-  width: 240px;
-  height: 240px;
-  border-radius: 120px;
-  background: conic-gradient(#E84393 0deg, #E84393 324deg, #FFFFFF 324deg, #FFFFFF 360deg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 240px; height: 240px; border-radius: 120px;
+  background: conic-gradient(#E84393 0deg, #E84393 0deg, #FFFFFF 0deg, #FFFFFF 360deg);
+  display: flex; align-items: center; justify-content: center;
   position: relative;
   box-shadow: 0 0 0 16px rgba(255,255,255,0.4);
+  transition: background .3s;
 }
-
 .timer-ring::before {
-  content: "";
-  position: absolute;
-  inset: 16px;
-  background: #FFFFFF;
-  border-radius: 50%;
+  content: ""; position: absolute; inset: 16px;
+  background: #FFFFFF; border-radius: 50%;
   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
 }
-
 .timer-content {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  position: relative; z-index: 1; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
 }
-
-.timer-content .time {
-  font-size: 48px;
-  font-weight: 700;
-  color: var(--c-text);
-  line-height: 1;
-}
-
-.timer-content .mode {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--c-text-2);
-}
-
-.timer-content .count {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--c-orange);
-}
-
+.timer-content .time { font-size: 48px; font-weight: 700; color: var(--c-text); line-height: 1; }
+.timer-content .mode { font-size: 16px; font-weight: 600; color: var(--c-text-2); }
+.timer-content .count { font-size: 13px; font-weight: 700; color: var(--c-orange); }
 .linked-task-chip {
-  height: 33px;
-  border-radius: 12px;
-  background: #D0ECFF;
-  display: inline-flex;
-  align-items: center;
-  padding: 0 16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--c-blue);
+  height: 33px; border-radius: 12px; background: #D0ECFF;
+  display: inline-flex; align-items: center;
+  padding: 0 16px; font-size: 14px; font-weight: 600; color: var(--c-blue);
 }
-
-.pomodoro-controls {
-  display: flex;
-  gap: 14px;
-  width: 100%;
-}
-
+.pomodoro-controls { display: flex; gap: 14px; width: 100%; }
 .pomodoro-tips {
   background: rgba(255,255,255,0.6);
   border-radius: var(--r-md);
   padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
+  display: flex; flex-direction: column; gap: 8px; width: 100%;
 }
-
-.pomodoro-tips p {
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--c-text-2);
-}
-
-/* ============== 商城 ============== */
-.shop-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--c-text);
-}
-
-.shop-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
+.pomodoro-tips p { font-size: 14px; font-weight: 400; color: var(--c-text-2); }
+.shop-title { font-size: 20px; font-weight: 700; color: var(--c-text); }
+.shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .reward-card {
-  background: #FFFFFF;
-  border: 1px solid #FFFFFF;
+  background: #FFFFFF; border: 1px solid #FFFFFF;
   border-radius: 22px;
   padding: 24px 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-
-.reward-icon {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
+.reward-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
 .reward-icon svg { width: 48px; height: 48px; }
-
-.reward-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--c-text);
-  text-align: center;
-}
-
-.reward-cost {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--c-orange);
-}
-
+.reward-name { font-size: 15px; font-weight: 600; color: var(--c-text); text-align: center; }
+.reward-cost { font-size: 15px; font-weight: 700; color: var(--c-orange); }
 .reward-card .btn-purple-grad,
 .reward-card .btn-grey-grad {
-  width: 100%;
-  height: 37px;
-  font-size: 14px;
-  margin-top: 4px;
+  width: 100%; height: 37px; font-size: 14px; margin-top: 4px;
 }
-
-.btn-grey-grad.insufficient {
-  color: #FFFFFF;
-}
-
-/* ============== 统计概览 ============== */
-.stats-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
+.btn-grey-grad.insufficient { color: #FFFFFF; }
+.stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .stat-card {
-  background: #FFFFFF;
-  border: 1px solid #FFFFFF;
+  background: #FFFFFF; border: 1px solid #FFFFFF;
   border-radius: var(--r-lg);
-  padding: 24px 16px;
-  text-align: center;
+  padding: 24px 16px; text-align: center;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-
-.stat-value {
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1;
-  margin-bottom: 6px;
-}
-
+.stat-value { font-size: 36px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
 .stat-value.blue { color: var(--c-blue); }
 .stat-value.green { color: var(--c-green); }
 .stat-value.orange { color: var(--c-orange); }
-
-.stat-label {
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--c-text-3);
-}
-
+.stat-label { font-size: 14px; font-weight: 400; color: var(--c-text-3); }
 .subject-distribution {
-  background: #FFFFFF;
-  border-radius: var(--r-lg);
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  background: #FFFFFF; border-radius: var(--r-lg);
+  padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-
-.subject-distribution h3 {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--c-text);
-  margin-bottom: 16px;
-}
-
+.subject-distribution h3 { font-size: 16px; font-weight: 700; color: var(--c-text); margin-bottom: 16px; }
 .subject-row { margin-bottom: 14px; }
 .subject-row:last-child { margin-bottom: 0; }
-
-.subject-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--c-text);
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.subject-name .dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.subject-name .count {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--c-text-3);
-}
-
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  background: #F0F0F0;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  border-radius: 4px;
-}
-
+.subject-name { font-size: 13px; font-weight: 600; color: var(--c-text); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.subject-name .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.subject-name .count { font-size: 12px; font-weight: 400; color: var(--c-text-3); }
+.progress-bar { width: 100%; height: 8px; background: #F0F0F0; border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 4px; }
 .progress-fill.red { background: linear-gradient(90deg, #FF7675, #E84393); }
 .progress-fill.blue { background: linear-gradient(90deg, #74B9FF, #0984E3); }
 .progress-fill.green { background: linear-gradient(90deg, #55EFC4, #00B894); }
-
+.progress-fill.purple { background: linear-gradient(90deg, #A29BFE, #6C5CE7); }
+.progress-fill.orange { background: linear-gradient(90deg, #FDCB6E, #E17055); }
+.progress-fill.pink { background: linear-gradient(90deg, #FD79A8, #E84393); }
 .weekly-chart {
-  background: #FFFFFF;
-  border-radius: var(--r-lg);
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  background: #FFFFFF; border-radius: var(--r-lg);
+  padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-
-.weekly-chart h3 {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--c-text);
-  margin-bottom: 18px;
-}
-
+.weekly-chart h3 { font-size: 16px; font-weight: 700; color: var(--c-text); margin-bottom: 18px; }
 .chart-bars {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-around;
-  height: 140px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid #F0F0F0;
+  display: flex; align-items: flex-end; justify-content: space-around;
+  height: 140px; padding-bottom: 18px; border-bottom: 1px solid #F0F0F0;
   position: relative;
 }
-
-.bar-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  flex: 1;
-}
-
+.bar-col { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
 .bar {
   width: 24px;
   background: linear-gradient(180deg, #FD79A8 0%, #A29BFE 100%);
   border-radius: 8px 8px 0 0;
   min-height: 8px;
+  transition: height .5s ease;
 }
-
 .bar.empty { background: #F0F0F0; }
-
-.bar-value {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--c-text-2);
-}
-
-.chart-labels {
-  display: flex;
-  justify-content: space-around;
-  padding-top: 8px;
-}
-
-.chart-labels span {
-  flex: 1;
-  text-align: center;
-  font-size: 11px;
-  color: var(--c-text-3);
-}
-
-/* ============== 历史记录 ============== */
-.history-page h3 {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--c-text);
-  margin-bottom: 6px;
-}
-
+.bar-value { font-size: 11px; font-weight: 700; color: var(--c-text-2); }
+.chart-labels { display: flex; justify-content: space-around; padding-top: 8px; }
+.chart-labels span { flex: 1; text-align: center; font-size: 11px; color: var(--c-text-3); }
+.history-page h3 { font-size: 22px; font-weight: 700; color: var(--c-text); margin-bottom: 6px; }
 .history-list { display: flex; flex-direction: column; gap: 12px; }
-
 .history-card {
-  background: #FFFFFF;
-  border-radius: var(--r-lg);
+  background: #FFFFFF; border-radius: var(--r-lg);
   padding: 16px 18px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  display: flex; align-items: center; gap: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-
-.history-date {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--c-text);
-  min-width: 78px;
-}
-
-.history-title {
-  flex: 1;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--c-text);
-}
-
-.history-duration {
-  font-size: 13px;
-  color: var(--c-text-3);
-}
-
-.history-points {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--c-green);
-  min-width: 32px;
-  text-align: right;
-}
-
-/* ============== 任务模板 ============== */
-.template-page h3 {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--c-text);
-}
-
+.history-date { font-size: 14px; font-weight: 700; color: var(--c-text); min-width: 78px; }
+.history-title { flex: 1; font-size: 14px; font-weight: 600; color: var(--c-text); }
+.history-duration { font-size: 13px; color: var(--c-text-3); }
+.history-points { font-size: 16px; font-weight: 700; color: var(--c-green); min-width: 32px; text-align: right; }
+.template-page h3 { font-size: 22px; font-weight: 700; color: var(--c-text); }
 .template-list { display: flex; flex-direction: column; gap: 14px; }
-
 .template-card {
-  background: #FFFFFF;
-  border-radius: var(--r-lg);
+  background: #FFFFFF; border-radius: var(--r-lg);
   padding: 16px 18px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  display: flex; align-items: center; gap: 14px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-
-.template-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
+.template-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 .template-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
 .template-name { font-size: 15px; font-weight: 700; color: var(--c-text); }
 .template-meta { font-size: 12px; color: var(--c-text-3); }
-
 .template-actions { display: flex; gap: 8px; }
-
 .btn-edit {
-  background: var(--c-tag-purple-bg);
-  color: var(--c-purple);
-  border: none;
-  font-family: var(--ff);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 6px 14px;
-  border-radius: 12px;
-  cursor: pointer;
+  background: var(--c-tag-purple-bg); color: var(--c-purple);
+  border: none; font-family: var(--ff);
+  font-size: 13px; font-weight: 600;
+  padding: 6px 14px; border-radius: 12px; cursor: pointer;
 }
-
 .btn-delete {
-  background: #FFE0E0;
-  color: var(--c-orange);
-  border: none;
-  font-family: var(--ff);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 6px 14px;
-  border-radius: 12px;
-  cursor: pointer;
+  background: #FFE0E0; color: var(--c-orange);
+  border: none; font-family: var(--ff);
+  font-size: 13px; font-weight: 600;
+  padding: 6px 14px; border-radius: 12px; cursor: pointer;
 }
-
-/* ============== 奖品/任务/科目 管理 ============== */
-.manager-page h3 {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--c-text);
-}
-
+.manager-page h3 { font-size: 22px; font-weight: 700; color: var(--c-text); }
 .manager-list { display: flex; flex-direction: column; gap: 14px; }
-
 .manager-card {
-  background: #FFFFFF;
-  border-radius: var(--r-lg);
+  background: #FFFFFF; border-radius: var(--r-lg);
   padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  display: flex; align-items: center; gap: 14px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-
 .manager-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-
 .manager-icon svg { width: 26px; height: 26px; }
-
 .manager-icon.orange { background: linear-gradient(135deg, #FFB86C, #FAB1A0); }
 .manager-icon.red { background: linear-gradient(135deg, #FF7675, #FAB1A0); }
 .manager-icon.purple { background: linear-gradient(135deg, #A29BFE, #6C5CE7); }
 .manager-icon.green { background: linear-gradient(135deg, #55EFC4, #00B894); }
 .manager-icon.blue { background: linear-gradient(135deg, #74B9FF, #0984E3); }
-
 .manager-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .manager-name { font-size: 15px; font-weight: 700; color: var(--c-text); }
 .manager-meta { font-size: 12px; color: var(--c-text-3); }
-
-/* Toggle Switch */
 .toggle {
-  width: 44px;
-  height: 26px;
-  background: #DFE6E9;
-  border-radius: 13px;
-  position: relative;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: background .25s;
+  width: 44px; height: 26px; background: #DFE6E9;
+  border-radius: 13px; position: relative;
+  cursor: pointer; flex-shrink: 0; transition: background .25s;
 }
-
 .toggle::after {
-  content: "";
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 20px;
-  height: 20px;
-  background: #FFFFFF;
-  border-radius: 50%;
-  transition: left .25s;
+  content: ""; position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; background: #FFFFFF;
+  border-radius: 50%; transition: left .25s;
   box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
-
 .toggle.on { background: linear-gradient(135deg, #A29BFE, #6C5CE7); }
 .toggle.on::after { left: 21px; }
-
-/* ============== 积分流水 ============== */
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .points-stat {
-  background: #FFFFFF;
-  border-radius: var(--r-lg);
-  padding: 24px 16px;
-  text-align: center;
+  background: #FFFFFF; border-radius: var(--r-lg);
+  padding: 24px 16px; text-align: center;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-
 .points-stat .value { font-size: 36px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
 .points-stat .value.blue { color: var(--c-blue); }
 .points-stat .value.green { color: var(--c-green); }
 .points-stat .value.orange { color: var(--c-orange); }
 .points-stat .label { font-size: 14px; color: var(--c-text-3); }
-
 .log-list { display: flex; flex-direction: column; gap: 14px; }
 .log-card {
-  background: #FFFFFF;
-  border-radius: var(--r-md);
+  background: #FFFFFF; border-radius: var(--r-md);
   padding: 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  display: flex; align-items: center; gap: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 .log-info { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .log-desc { font-size: 13px; font-weight: 700; color: var(--c-text); }
 .log-meta { display: flex; align-items: center; gap: 8px; }
 .log-tag {
-  height: 16px;
-  padding: 0 8px;
-  border-radius: 8px;
-  font-size: 10px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
+  height: 16px; padding: 0 8px; border-radius: 8px;
+  font-size: 10px; font-weight: 600;
+  display: inline-flex; align-items: center;
 }
 .log-tag.purple { background: var(--c-tag-purple-bg); color: var(--c-purple); }
 .log-tag.pink { background: #FFE0E0; color: var(--c-orange); }
@@ -1058,22 +521,151 @@ html, body {
 .log-amount { font-size: 16px; font-weight: 700; }
 .log-amount.plus { color: var(--c-green); }
 .log-amount.minus { color: var(--c-orange); }
-
-/* ============== 子页面 (家长) ============== */
-.parent-page {
-  display: none;
-  flex-direction: column;
-  gap: 16px;
-}
+.parent-page { display: none; flex-direction: column; gap: 16px; }
 .parent-page.active { display: flex; }
+
+/* ============== 模态框 ============== */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+  align-items: flex-end; justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: #FFFFFF;
+  border-radius: 24px 24px 0 0;
+  width: 100%; max-width: 480px;
+  padding: 28px 24px 36px;
+  animation: modalSlideUp .3s ease;
+}
+@keyframes modalSlideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px;
+}
+.modal-title { font-size: 20px; font-weight: 700; color: var(--c-text); }
+.modal-close {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #F0F0F0; border: none;
+  font-size: 20px; color: var(--c-text-3);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff);
+}
+.form-group { margin-bottom: 18px; }
+.form-label { font-size: 14px; font-weight: 600; color: var(--c-text-2); margin-bottom: 8px; display: block; }
+.form-input, .form-select {
+  width: 100%; height: 46px;
+  border: 2px solid var(--c-border);
+  border-radius: 14px; padding: 0 16px;
+  font-family: var(--ff); font-size: 15px; color: var(--c-text);
+  background: #FFFFFF; outline: none;
+  transition: border-color .2s;
+}
+.form-input:focus, .form-select:focus { border-color: var(--c-purple-light); }
+.form-row { display: flex; gap: 12px; }
+.form-row .form-group { flex: 1; }
+.modal-actions { display: flex; gap: 14px; margin-top: 24px; }
+.modal-actions .btn-pink-grad,
+.modal-actions .btn-grey-grad {
+  flex: 1; height: 50px; font-size: 16px;
+}
+
+/* ============== Toast ============== */
+.toast-container {
+  position: fixed; top: 90px; right: 16px;
+  z-index: 2000;
+  display: flex; flex-direction: column; gap: 10px;
+  pointer-events: none;
+}
+.toast {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 14px 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  display: flex; align-items: center; gap: 10px;
+  font-size: 14px; font-weight: 600; color: var(--c-text);
+  animation: toastIn .3s ease;
+  pointer-events: auto;
+  max-width: 320px;
+}
+.toast.hiding { animation: toastOut .3s ease forwards; }
+@keyframes toastIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes toastOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(120%); opacity: 0; }
+}
+.toast-icon { font-size: 22px; flex-shrink: 0; }
+
+/* ============== 确认条 ============== */
+.confirm-bar {
+  display: none;
+  background: #FFF0F0;
+  border-radius: 14px;
+  padding: 12px 16px;
+  align-items: center; gap: 10px;
+  margin-top: 8px;
+  animation: fadeIn .2s ease;
+}
+.confirm-bar.active { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.confirm-text { flex: 1; font-size: 13px; font-weight: 600; color: var(--c-red); }
+.confirm-yes {
+  background: linear-gradient(135deg, #FF7675, #E84393);
+  color: #FFF; border: none; font-family: var(--ff);
+  font-size: 13px; font-weight: 700;
+  padding: 6px 16px; border-radius: 12px; cursor: pointer;
+}
+.confirm-no {
+  background: #F0F0F0; color: var(--c-text-3);
+  border: none; font-family: var(--ff);
+  font-size: 13px; font-weight: 700;
+  padding: 6px 16px; border-radius: 12px; cursor: pointer;
+}
+
+/* Task select in pomodoro */
+.task-select-bar {
+  display: flex; flex-wrap: wrap; gap: 8px; width: 100%; justify-content: center;
+}
+.task-select-chip {
+  height: 33px; border-radius: 12px; background: #F0F0F0;
+  border: 2px solid transparent;
+  display: inline-flex; align-items: center;
+  padding: 0 14px; font-size: 13px; font-weight: 600; color: var(--c-text-2);
+  cursor: pointer; transition: all .2s;
+}
+.task-select-chip.selected {
+  background: #D0ECFF; border-color: var(--c-blue); color: var(--c-blue);
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 40px 20px; color: var(--c-text-4);
+  font-size: 15px;
+}
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+@media (min-width: 481px) {
+  .modal-overlay { align-items: center; }
+  .modal { border-radius: 24px; max-width: 420px; }
+  @keyframes modalSlideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+}
 </style>
 </head>
 <body>
 
 <div class="stage">
   <div class="app" id="app">
-
-    <!-- Header -->
     <header class="header">
       <div class="logo">
         <svg viewBox="0 0 30 30" fill="none">
@@ -1089,14 +681,11 @@ html, body {
     </header>
 
     <div class="app-inner">
-
       <!-- 小孩模式 -->
       <div class="mode-content active" id="mode-kid">
-
-        <!-- 共享：倒计时 + 积分 -->
-        <div class="countdown-card">
-          <div class="countdown-date">7月27日 周一</div>
-          <div class="countdown-days">36</div>
+        <div class="countdown-card" id="kid-countdown">
+          <div class="countdown-date" id="kid-countdown-date"></div>
+          <div class="countdown-days" id="kid-countdown-days"></div>
           <div class="countdown-label">距离开学分班考还有</div>
         </div>
 
@@ -1108,98 +697,48 @@ html, body {
             </svg>
             <span class="points-label">我的积分</span>
           </div>
-          <span class="points-value">120</span>
+          <span class="points-value" id="kid-points">0</span>
         </div>
 
-        <!-- 小孩 Tabs -->
         <div class="tabs">
           <button class="active" data-kid-page="tasks">今日任务</button>
           <button data-kid-page="pomodoro">番茄钟</button>
           <button data-kid-page="shop">积分兑换</button>
         </div>
 
-        <!-- 今日任务 -->
         <section class="page active" id="page-tasks">
           <div class="section-header">
-            <span class="section-title">今日任务（2/3）</span>
+            <span class="section-title" id="task-progress-title">今日任务（0/0）</span>
             <div class="streak-badge">
               <svg viewBox="0 0 18 18" fill="none">
                 <path d="M9 1.5C9 5 13 6.5 13 11.5C13 14 11 16.5 9 16.5C7 16.5 5 14 5 11.5C5 9 7 8 7 6C7 4 6 3 6 3C6 3 8 4 9 1.5Z" fill="#D63031"/>
               </svg>
-              连续打卡 5 天
+              <span id="streak-text">连续打卡 0 天</span>
             </div>
           </div>
-
-          <div class="task-list">
-            <div class="task-card">
-              <div class="checkbox"></div>
-              <div class="task-content">
-                <div class="task-title">背 20 个英语单词</div>
-                <div class="tags">
-                  <span class="tag tag-green">英语</span>
-                  <span class="tag tag-purple">背单词</span>
-                  <span class="tag tag-yellow">15 分钟</span>
-                  <span class="tag tag-points">+15 分</span>
-                </div>
-              </div>
-              <button class="delete-btn">×</button>
-            </div>
-
-            <div class="task-card completed">
-              <div class="checkbox checked"></div>
-              <div class="task-content">
-                <div class="task-title">做一篇语文阅读理解</div>
-                <div class="tags">
-                  <span class="tag tag-red">语文</span>
-                  <span class="tag tag-purple">练习题</span>
-                  <span class="tag tag-yellow">20 分钟</span>
-                  <span class="tag tag-points">+20 分</span>
-                </div>
-              </div>
-              <button class="delete-btn">×</button>
-            </div>
-
-            <div class="task-card completed">
-              <div class="checkbox checked"></div>
-              <div class="task-content">
-                <div class="task-title">做数学练习题 10 道</div>
-                <div class="tags">
-                  <span class="tag tag-blue">数学</span>
-                  <span class="tag tag-purple">练习题</span>
-                  <span class="tag tag-yellow">25 分钟</span>
-                  <span class="tag tag-points">+25 分</span>
-                </div>
-              </div>
-              <button class="delete-btn">×</button>
-            </div>
-          </div>
-
-          <button class="add-task-btn">＋ 添加任务</button>
+          <div class="task-list" id="task-list"></div>
+          <button class="add-task-btn" id="btn-add-task">＋ 添加任务</button>
         </section>
 
-        <!-- 番茄钟 -->
         <section class="page" id="page-pomodoro">
           <div class="pomodoro-card">
             <div class="pomodoro-mode-switch">
               <button class="active" data-pomo-mode="focus">专注时间</button>
               <button data-pomo-mode="rest">休息时间</button>
             </div>
-
             <div class="timer-ring" id="timer-ring">
               <div class="timer-content">
                 <div class="time" id="pomo-time">25:00</div>
                 <div class="mode" id="pomo-mode">专注时间</div>
-                <div class="count">今天已完成 2 个番茄</div>
+                <div class="count" id="pomo-count">今天已完成 0 个番茄</div>
               </div>
             </div>
-
-            <div class="linked-task-chip">关联任务：背 20 个英语单词</div>
-
+            <div class="linked-task-chip" id="pomo-linked-task">未关联任务</div>
+            <div class="task-select-bar" id="pomo-task-select"></div>
             <div class="pomodoro-controls">
               <button class="btn-pink-grad" id="pomo-toggle">开始专注</button>
               <button class="btn-grey-grad" id="pomo-reset">重置</button>
             </div>
-
             <div class="pomodoro-tips">
               <p>专注 25 分钟，休息 5 分钟，学习更高效</p>
               <p>每完成 1 个番茄钟，可获得额外积分奖励</p>
@@ -1207,96 +746,21 @@ html, body {
           </div>
         </section>
 
-        <!-- 积分兑换 -->
         <section class="page" id="page-shop">
           <h3 class="shop-title">积分商城</h3>
-          <div class="shop-grid">
-            <div class="reward-card">
-              <div class="reward-icon">
-                <svg viewBox="0 0 48 48" fill="none">
-                  <path d="M24 8L30 22H40L32 30L36 44L24 36L12 44L16 30L8 22H18L24 8Z" fill="none"/>
-                  <path d="M24 11L27 22H15L24 11Z" fill="#FD79A8"/>
-                  <path d="M24 11L21 22H33L24 11Z" fill="#FAB1A0"/>
-                  <path d="M16.5 22L24 36L31.5 22Z" fill="#FDCB6E" stroke="#E17055" stroke-width="1"/>
-                </svg>
-              </div>
-              <div class="reward-name">买冰淇淋一个</div>
-              <div class="reward-cost">30 积分</div>
-              <button class="btn-purple-grad">兑换</button>
-            </div>
-
-            <div class="reward-card">
-              <div class="reward-icon">
-                <svg viewBox="0 0 48 48" fill="none">
-                  <rect x="6" y="14" width="36" height="24" rx="2" fill="#74B9FF" stroke="#0984E3" stroke-width="1.5"/>
-                  <path d="M17 7L31 7L27 14L21 14Z" stroke="#0984E3" stroke-width="1.5" fill="none"/>
-                  <rect x="11" y="19" width="20" height="14" fill="#E8F4FF"/>
-                </svg>
-              </div>
-              <div class="reward-name">看电视 30 分钟</div>
-              <div class="reward-cost">50 积分</div>
-              <button class="btn-purple-grad">兑换</button>
-            </div>
-
-            <div class="reward-card">
-              <div class="reward-icon">
-                <svg viewBox="0 0 48 48" fill="none">
-                  <rect x="4" y="16" width="40" height="20" rx="6" fill="#A29BFE" stroke="#6C5CE7" stroke-width="1.5"/>
-                  <circle cx="14" cy="26" r="3" fill="#FFFFFF"/>
-                  <circle cx="32" cy="23" r="2" fill="#FDCB6E"/>
-                  <circle cx="38" cy="28" r="2" fill="#55EFC4"/>
-                </svg>
-              </div>
-              <div class="reward-name">玩游戏 1 小时</div>
-              <div class="reward-cost">80 积分</div>
-              <button class="btn-purple-grad">兑换</button>
-            </div>
-
-            <div class="reward-card">
-              <div class="reward-icon">
-                <svg viewBox="0 0 48 48" fill="none">
-                  <rect x="8" y="6" width="32" height="36" fill="#55EFC4" stroke="#00B894" stroke-width="1.5"/>
-                  <rect x="8" y="38" width="32" height="4" fill="#00B894"/>
-                  <rect x="18" y="14" width="14" height="6" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
-                </svg>
-              </div>
-              <div class="reward-name">买一本书</div>
-              <div class="reward-cost">200 积分</div>
-              <button class="btn-grey-grad insufficient">积分不足</button>
-            </div>
-
-            <div class="reward-card">
-              <div class="reward-icon">
-                <svg viewBox="0 0 48 48" fill="none">
-                  <circle cx="24" cy="20" r="14" stroke="#FD79A8" stroke-width="1.5" fill="none"/>
-                  <circle cx="24" cy="20" r="4" fill="#FDCB6E" stroke="#E17055" stroke-width="1"/>
-                  <path d="M17 34L31 34L24 44Z" stroke="#FD79A8" stroke-width="1.5" fill="none"/>
-                  <circle cx="24" cy="6" r="2.5" fill="#A29BFE"/>
-                  <circle cx="38" cy="20" r="2.5" fill="#55EFC4"/>
-                  <circle cx="10" cy="20" r="2.5" fill="#74B9FF"/>
-                </svg>
-              </div>
-              <div class="reward-name">周末出去玩</div>
-              <div class="reward-cost">300 积分</div>
-              <button class="btn-grey-grad insufficient">积分不足</button>
-            </div>
-          </div>
+          <div class="shop-grid" id="shop-grid"></div>
         </section>
-
       </div>
 
       <!-- 家长模式 -->
       <div class="mode-content" id="mode-parent">
-
-        <!-- 倒计时（家长页也有） -->
-        <div class="countdown-card">
-          <button class="edit-btn">编辑</button>
-          <div class="countdown-date">7月27日 周一</div>
-          <div class="countdown-days">36</div>
+        <div class="countdown-card" id="parent-countdown">
+          <button class="edit-btn" id="btn-edit-countdown">编辑</button>
+          <div class="countdown-date" id="parent-countdown-date"></div>
+          <div class="countdown-days" id="parent-countdown-days"></div>
           <div class="countdown-label">距离开学分班考还有</div>
         </div>
 
-        <!-- 家长 Tabs -->
         <div class="parent-tabs">
           <button class="active" data-parent-page="overview">统计概览</button>
           <button data-parent-page="history">历史记录</button>
@@ -1308,509 +772,1183 @@ html, body {
           <button data-parent-page="points">积分流水</button>
         </div>
 
-        <!-- 统计概览 -->
         <section class="parent-page active" id="parent-overview">
-          <div class="stats-row">
-            <div class="stat-card">
-              <div class="stat-value blue">120</div>
-              <div class="stat-label">当前积分</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value green">5</div>
-              <div class="stat-label">连续打卡天数</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value orange">67%</div>
-              <div class="stat-label">总完成率</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value" style="color:var(--c-text);">3</div>
-              <div class="stat-label">任务总数</div>
-            </div>
-          </div>
-
-          <div class="subject-distribution">
-            <h3>各科任务分布</h3>
-            <div class="subject-row">
-              <div class="subject-name">
-                <span class="dot" style="background:var(--c-red);"></span>
-                语文 <span class="count">1 个任务</span>
-              </div>
-              <div class="progress-bar"><div class="progress-fill red" style="width:100%"></div></div>
-            </div>
-            <div class="subject-row">
-              <div class="subject-name">
-                <span class="dot" style="background:var(--c-blue);"></span>
-                数学 <span class="count">1 个任务</span>
-              </div>
-              <div class="progress-bar"><div class="progress-fill blue" style="width:100%"></div></div>
-            </div>
-            <div class="subject-row">
-              <div class="subject-name">
-                <span class="dot" style="background:var(--c-green);"></span>
-                英语 <span class="count">1 个任务</span>
-              </div>
-              <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
-            </div>
-          </div>
-
-          <div class="weekly-chart">
-            <h3>最近 7 天完成情况</h3>
-            <div class="chart-bars">
-              <div class="bar-col"><div class="bar-value">2</div><div class="bar" style="height:50%"></div></div>
-              <div class="bar-col"><div class="bar-value">3</div><div class="bar" style="height:80%"></div></div>
-              <div class="bar-col"><div class="bar-value">1</div><div class="bar" style="height:25%"></div></div>
-              <div class="bar-col"><div class="bar-value">0</div><div class="bar empty" style="height:8%"></div></div>
-              <div class="bar-col"><div class="bar-value">2</div><div class="bar" style="height:50%"></div></div>
-              <div class="bar-col"><div class="bar-value">3</div><div class="bar" style="height:80%"></div></div>
-              <div class="bar-col"><div class="bar-value">2</div><div class="bar" style="height:50%"></div></div>
-            </div>
-            <div class="chart-labels">
-              <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
-            </div>
-          </div>
+          <div class="stats-row" id="stats-row"></div>
+          <div class="subject-distribution" id="subject-dist"></div>
+          <div class="weekly-chart" id="weekly-chart-wrap"></div>
         </section>
 
-        <!-- 历史记录 -->
         <section class="parent-page" id="parent-history">
           <h3 style="font-size:22px;font-weight:700;">历史打卡记录</h3>
-          <div class="history-list">
-            <div class="history-card">
-              <div class="history-date">7/27 周一</div>
-              <div class="history-title">背 20 个英语单词</div>
-              <div class="history-duration">15 分钟</div>
-              <div class="history-points">+15</div>
-            </div>
-            <div class="history-card">
-              <div class="history-date">7/26 周日</div>
-              <div class="history-title">做数学练习题 10 道</div>
-              <div class="history-duration">25 分钟</div>
-              <div class="history-points">+25</div>
-            </div>
-            <div class="history-card">
-              <div class="history-date">7/25 周六</div>
-              <div class="history-title">做一篇语文阅读理解</div>
-              <div class="history-duration">20 分钟</div>
-              <div class="history-points">+20</div>
-            </div>
-            <div class="history-card">
-              <div class="history-date">7/24 周五</div>
-              <div class="history-title">背诵英语课文一篇</div>
-              <div class="history-duration">20 分钟</div>
-              <div class="history-points">+20</div>
-            </div>
-            <div class="history-card">
-              <div class="history-date">7/23 周四</div>
-              <div class="history-title">背诵古诗词一首</div>
-              <div class="history-duration">10 分钟</div>
-              <div class="history-points">+10</div>
-            </div>
-          </div>
+          <div class="history-list" id="history-list"></div>
         </section>
 
-        <!-- 任务模板 -->
         <section class="parent-page" id="parent-templates">
           <div class="section-header">
-            <h3 style="font-size:22px;font-weight:700;">任务模板（5 个）</h3>
-            <button class="btn-primary">+ 新增模板</button>
+            <h3 style="font-size:22px;font-weight:700;" id="template-title">任务模板（0 个）</h3>
+            <button class="btn-primary" id="btn-add-template">+ 新增模板</button>
           </div>
-          <div class="template-list">
-            <div class="template-card">
-              <span class="template-dot" style="background:var(--c-green);"></span>
-              <div class="template-info">
-                <div class="template-name">背 20 个英语单词</div>
-                <div class="template-meta">背单词 · 15 分钟</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-            <div class="template-card">
-              <span class="template-dot" style="background:var(--c-red);"></span>
-              <div class="template-info">
-                <div class="template-name">做一篇语文阅读理解</div>
-                <div class="template-meta">练习题 · 20 分钟</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-            <div class="template-card">
-              <span class="template-dot" style="background:var(--c-blue);"></span>
-              <div class="template-info">
-                <div class="template-name">做数学练习题 10 道</div>
-                <div class="template-meta">练习题 · 25 分钟</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-            <div class="template-card">
-              <span class="template-dot" style="background:var(--c-green);"></span>
-              <div class="template-info">
-                <div class="template-name">背诵英语课文一篇</div>
-                <div class="template-meta">背课文 · 20 分钟</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-            <div class="template-card">
-              <span class="template-dot" style="background:var(--c-red);"></span>
-              <div class="template-info">
-                <div class="template-name">背诵古诗词一首</div>
-                <div class="template-meta">背课文 · 10 分钟</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-          </div>
+          <div class="template-list" id="template-list"></div>
         </section>
 
-        <!-- 奖品管理 -->
         <section class="parent-page" id="parent-rewards">
           <div class="section-header">
-            <h3 style="font-size:22px;font-weight:700;">奖品列表（5 个）</h3>
-            <button class="btn-primary">+ 新增奖品</button>
+            <h3 style="font-size:22px;font-weight:700;" id="rewards-title">奖品列表（0 个）</h3>
+            <button class="btn-primary" id="btn-add-reward">+ 新增奖品</button>
           </div>
-          <div class="manager-list">
-            <div class="manager-card">
-              <div class="manager-icon orange">
-                <svg viewBox="0 0 26 26" fill="none">
-                  <rect x="2" y="7" width="22" height="14" rx="1.5" fill="#FFFFFF"/>
-                  <path d="M9 3L17 3L15 7L11 7Z" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
-                </svg>
-              </div>
-              <div class="manager-info">
-                <div class="manager-name">看电视 30 分钟</div>
-                <div class="manager-meta">50 积分</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-            <div class="manager-card">
-              <div class="manager-icon red">
-                <svg viewBox="0 0 26 26" fill="none">
-                  <path d="M13 3L16 9L22 11L17.5 15L18.5 22L13 18.5L7.5 22L8.5 15L4 11L10 9Z" fill="#FFFFFF"/>
-                </svg>
-              </div>
-              <div class="manager-info">
-                <div class="manager-name">买冰淇淋一个</div>
-                <div class="manager-meta">30 积分</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-            <div class="manager-card">
-              <div class="manager-icon purple">
-                <svg viewBox="0 0 26 26" fill="none">
-                  <rect x="2" y="9" width="22" height="11" rx="3" fill="#FFFFFF"/>
-                  <circle cx="8" cy="14" r="2" fill="#A29BFE"/>
-                  <circle cx="18" cy="13" r="1.5" fill="#FDCB6E"/>
-                </svg>
-              </div>
-              <div class="manager-info">
-                <div class="manager-name">玩游戏 1 小时</div>
-                <div class="manager-meta">80 积分</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-            <div class="manager-card">
-              <div class="manager-icon green">
-                <svg viewBox="0 0 26 26" fill="none">
-                  <rect x="5" y="3" width="16" height="20" fill="#FFFFFF"/>
-                  <rect x="5" y="20" width="16" height="3" fill="#FFFFFF"/>
-                  <rect x="10" y="8" width="6" height="3" stroke="#00B894" stroke-width="0.8" fill="none"/>
-                </svg>
-              </div>
-              <div class="manager-info">
-                <div class="manager-name">买一本书</div>
-                <div class="manager-meta">200 积分</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-            <div class="manager-card">
-              <div class="manager-icon blue">
-                <svg viewBox="0 0 26 26" fill="none">
-                  <circle cx="13" cy="11" r="7" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
-                  <path d="M8 20L18 20L13 26Z" fill="#FFFFFF"/>
-                  <circle cx="9" cy="11" r="1.5" fill="#FFFFFF"/>
-                </svg>
-              </div>
-              <div class="manager-info">
-                <div class="manager-name">周末出去玩</div>
-                <div class="manager-meta">300 积分</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-          </div>
+          <div class="manager-list" id="rewards-list"></div>
         </section>
 
-        <!-- 任务管理 -->
         <section class="parent-page" id="parent-tasks">
           <div class="section-header">
-            <h3 style="font-size:22px;font-weight:700;">任务列表（3 个）</h3>
-            <button class="btn-primary">+ 新增任务</button>
+            <h3 style="font-size:22px;font-weight:700;" id="ptasks-title">任务列表（0 个）</h3>
+            <button class="btn-primary" id="btn-add-ptask">+ 新增任务</button>
           </div>
-          <div class="manager-list">
-            <div class="manager-card">
-              <div class="manager-icon green">
-                <svg viewBox="0 0 26 26" fill="none">
-                  <rect x="5" y="3" width="16" height="20" fill="#FFFFFF"/>
-                  <rect x="5" y="20" width="16" height="3" fill="#FFFFFF"/>
-                </svg>
-              </div>
-              <div class="manager-info">
-                <div class="manager-name">背 20 个英语单词</div>
-                <div class="manager-meta">英语 · 15 分钟</div>
-              </div>
-              <span class="tag tag-points">+15</span>
-              <div class="toggle on"></div>
-            </div>
-            <div class="manager-card">
-              <div class="manager-icon red">
-                <svg viewBox="0 0 26 26" fill="none">
-                  <rect x="12" y="2" width="2" height="22" fill="#FFFFFF"/>
-                  <path d="M7 8L19 8" stroke="#FFFFFF" stroke-width="1.5"/>
-                  <path d="M7 13L19 13" stroke="#FFFFFF" stroke-width="1.5"/>
-                  <path d="M7 18L19 18" stroke="#FFFFFF" stroke-width="1.5"/>
-                </svg>
-              </div>
-              <div class="manager-info">
-                <div class="manager-name">做一篇语文阅读理解</div>
-                <div class="manager-meta">语文 · 20 分钟</div>
-              </div>
-              <span class="tag tag-points">+20</span>
-              <div class="toggle on"></div>
-            </div>
-            <div class="manager-card">
-              <div class="manager-icon blue">
-                <svg viewBox="0 0 26 26" fill="none">
-                  <rect x="3" y="3" width="20" height="20" rx="2" fill="#FFFFFF"/>
-                  <circle cx="8" cy="8" r="1.5" fill="#0984E3"/>
-                  <circle cx="13" cy="8" r="1.5" fill="#0984E3"/>
-                  <circle cx="18" cy="8" r="1.5" fill="#0984E3"/>
-                  <circle cx="8" cy="13" r="1.5" fill="#0984E3"/>
-                  <circle cx="13" cy="13" r="1.5" fill="#0984E3"/>
-                  <circle cx="18" cy="13" r="1.5" fill="#0984E3"/>
-                  <circle cx="8" cy="18" r="1.5" fill="#0984E3"/>
-                  <circle cx="13" cy="18" r="1.5" fill="#0984E3"/>
-                  <circle cx="18" cy="18" r="1.5" fill="#0984E3"/>
-                </svg>
-              </div>
-              <div class="manager-info">
-                <div class="manager-name">做数学练习题 10 道</div>
-                <div class="manager-meta">数学 · 25 分钟</div>
-              </div>
-              <span class="tag tag-points">+25</span>
-              <div class="toggle on"></div>
-            </div>
-          </div>
+          <div class="manager-list" id="ptasks-list"></div>
         </section>
 
-        <!-- 科目管理 -->
         <section class="parent-page" id="parent-subjects">
           <div class="section-header">
-            <h3 style="font-size:22px;font-weight:700;">科目管理（3 个）</h3>
-            <button class="btn-primary">+ 新增科目</button>
+            <h3 style="font-size:22px;font-weight:700;" id="subjects-title">科目管理（0 个）</h3>
+            <button class="btn-primary" id="btn-add-subject">+ 新增科目</button>
           </div>
-          <div class="manager-list">
-            <div class="manager-card">
-              <div class="manager-icon red"></div>
-              <div class="manager-info">
-                <div class="manager-name">语文</div>
-                <div class="manager-meta">练习题、背课文</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-            <div class="manager-card">
-              <div class="manager-icon blue"></div>
-              <div class="manager-info">
-                <div class="manager-name">数学</div>
-                <div class="manager-meta">练习题</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-            <div class="manager-card">
-              <div class="manager-icon green"></div>
-              <div class="manager-info">
-                <div class="manager-name">英语</div>
-                <div class="manager-meta">背单词、背课文</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-          </div>
+          <div class="manager-list" id="subjects-list"></div>
         </section>
 
-        <!-- 任务类型 -->
         <section class="parent-page" id="parent-types">
           <div class="section-header">
-            <h3 style="font-size:22px;font-weight:700;">任务类型（3 个）</h3>
-            <button class="btn-primary">＋ 新增类型</button>
+            <h3 style="font-size:22px;font-weight:700;" id="types-title">任务类型（0 个）</h3>
+            <button class="btn-primary" id="btn-add-type">+ 新增类型</button>
           </div>
-          <div class="manager-list">
-            <div class="manager-card">
-              <div class="manager-icon purple">
-                <svg viewBox="0 0 26 26" fill="none">
-                  <circle cx="13" cy="13" r="13" fill="#A29BFE"/>
-                  <rect x="9" y="7" width="8" height="12" fill="#FFFFFF"/>
-                  <rect x="11" y="6" width="4" height="2" fill="#DCD6FF"/>
-                  <rect x="10" y="11" width="6" height="1.2" fill="#A29BFE"/>
-                  <rect x="10" y="14" width="6" height="1.2" fill="#A29BFE"/>
-                </svg>
-              </div>
-              <div class="manager-info">
-                <div class="manager-name">练习题</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-            <div class="manager-card">
-              <div class="manager-icon purple">
-                <svg viewBox="0 0 26 26" fill="none">
-                  <circle cx="13" cy="13" r="13" fill="#A29BFE"/>
-                  <rect x="9" y="7" width="8" height="12" fill="#FFFFFF"/>
-                  <rect x="11" y="6" width="4" height="2" fill="#DCD6FF"/>
-                  <rect x="10" y="11" width="6" height="1.2" fill="#A29BFE"/>
-                  <rect x="10" y="14" width="6" height="1.2" fill="#A29BFE"/>
-                </svg>
-              </div>
-              <div class="manager-info">
-                <div class="manager-name">背单词</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-            <div class="manager-card">
-              <div class="manager-icon purple">
-                <svg viewBox="0 0 26 26" fill="none">
-                  <circle cx="13" cy="13" r="13" fill="#A29BFE"/>
-                  <rect x="9" y="7" width="8" height="12" fill="#FFFFFF"/>
-                  <rect x="11" y="6" width="4" height="2" fill="#DCD6FF"/>
-                  <rect x="10" y="11" width="6" height="1.2" fill="#A29BFE"/>
-                  <rect x="10" y="14" width="6" height="1.2" fill="#A29BFE"/>
-                </svg>
-              </div>
-              <div class="manager-info">
-                <div class="manager-name">背课文</div>
-              </div>
-              <div class="template-actions">
-                <button class="btn-edit">编辑</button>
-                <button class="btn-delete">删除</button>
-              </div>
-            </div>
-          </div>
+          <div class="manager-list" id="types-list"></div>
         </section>
 
-        <!-- 积分流水 -->
         <section class="parent-page" id="parent-points">
-          <div class="stats-grid">
-            <div class="points-stat"><div class="value blue">80</div><div class="label">当前积分</div></div>
-            <div class="points-stat"><div class="value green">110</div><div class="label">累计获得</div></div>
-            <div class="points-stat"><div class="value orange">30</div><div class="label">累计消费</div></div>
-            <div class="points-stat"><div class="value" style="color:var(--c-text);">7</div><div class="label">记录总数</div></div>
-          </div>
-
+          <div class="stats-grid" id="points-stats"></div>
           <h3 style="font-size:16px;font-weight:700;color:var(--c-text);">积分明细</h3>
-          <div class="log-list">
-            <div class="log-card">
-              <div class="log-info">
-                <div class="log-desc">完成任务：背 20 个英语单词</div>
-                <div class="log-meta">
-                  <span class="log-tag purple">任务完成</span>
-                  <span class="log-date">07-27 12:30</span>
-                </div>
-              </div>
-              <div class="log-amount plus">+15</div>
-            </div>
-            <div class="log-card">
-              <div class="log-info">
-                <div class="log-desc">兑换奖品：买冰淇淋一个</div>
-                <div class="log-meta">
-                  <span class="log-tag pink">兑换奖品</span>
-                  <span class="log-date">07-26 18:05</span>
-                </div>
-              </div>
-              <div class="log-amount minus">-30</div>
-            </div>
-            <div class="log-card">
-              <div class="log-info">
-                <div class="log-desc">完成任务：做数学练习题 10 道</div>
-                <div class="log-meta">
-                  <span class="log-tag purple">任务完成</span>
-                  <span class="log-date">07-26 16:40</span>
-                </div>
-              </div>
-              <div class="log-amount plus">+25</div>
-            </div>
-            <div class="log-card">
-              <div class="log-info">
-                <div class="log-desc">当日全部任务完成奖励</div>
-                <div class="log-meta">
-                  <span class="log-tag green">全勤奖励</span>
-                  <span class="log-date">07-26 20:00</span>
-                </div>
-              </div>
-              <div class="log-amount plus">+10</div>
-            </div>
-            <div class="log-card">
-              <div class="log-info">
-                <div class="log-desc">完成任务：做一篇语文阅读理解</div>
-                <div class="log-meta">
-                  <span class="log-tag purple">任务完成</span>
-                  <span class="log-date">07-25 15:20</span>
-                </div>
-              </div>
-              <div class="log-amount plus">+20</div>
-            </div>
-          </div>
+          <div class="log-list" id="points-log-list"></div>
         </section>
-
       </div>
-
     </div>
   </div>
 </div>
 
+<!-- 模态框容器 -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<!-- Toast容器 -->
+<div class="toast-container" id="toast-container"></div>
+
 <script>
+(function() {
+'use strict';
+
+// ============== 工具函数 ==============
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+function today() { return new Date().toISOString().slice(0, 10); }
+function now() { return new Date().toISOString(); }
+function fmtDate(d) {
+  const dt = new Date(d);
+  const m = dt.getMonth() + 1;
+  const day = dt.getDate();
+  const weekdays = ['日','一','二','三','四','五','六'];
+  return m + '月' + day + '日 周' + weekdays[dt.getDay()];
+}
+function fmtDateShort(d) {
+  const dt = new Date(d);
+  return (dt.getMonth()+1) + '/' + dt.getDate();
+}
+function fmtDateTime(iso) {
+  const dt = new Date(iso);
+  const mm = String(dt.getMonth()+1).padStart(2,'0');
+  const dd = String(dt.getDate()).padStart(2,'0');
+  const hh = String(dt.getHours()).padStart(2,'0');
+  const mi = String(dt.getMinutes()).padStart(2,'0');
+  return mm + '-' + dd + ' ' + hh + ':' + mi;
+}
+function daysBetween(d1, d2) {
+  return Math.ceil((new Date(d2) - new Date(d1)) / 86400000);
+}
+
+// ============== Toast ==============
+function showToast(text, icon) {
+  icon = icon || '\u{2705}';
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = '<span class="toast-icon">' + icon + '</span><span>' + text + '</span>';
+  c.appendChild(t);
+  setTimeout(() => { t.classList.add('hiding'); }, 2200);
+  setTimeout(() => { t.remove(); }, 2500);
+}
+
+// ============== 模态框 ==============
+function showModal(title, bodyHTML, onConfirm) {
+  const overlay = document.getElementById('modal-overlay');
+  const content = document.getElementById('modal-content');
+  content.innerHTML =
+    '<div class="modal-header">' +
+      '<span class="modal-title">' + title + '</span>' +
+      '<button class="modal-close" id="modal-close-btn">\u00D7</button>' +
+    '</div>' +
+    '<div id="modal-body">' + bodyHTML + '</div>' +
+    '<div class="modal-actions">' +
+      '<button class="btn-grey-grad" id="modal-cancel">取消</button>' +
+      '<button class="btn-pink-grad" id="modal-confirm">确认</button>' +
+    '</div>';
+  overlay.classList.add('active');
+  document.getElementById('modal-close-btn').onclick = closeModal;
+  document.getElementById('modal-cancel').onclick = closeModal;
+  document.getElementById('modal-confirm').onclick = function() {
+    if (onConfirm) onConfirm();
+  };
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('active');
+}
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ============== 数据层 ==============
+const STORAGE_KEY = 'study_tracker_v1';
+
+// 科目颜色映射
+const SUBJECT_COLORS = ['red','blue','green','purple','orange','pink'];
+const COLOR_MAP = {
+  '语文': 'red', '数学': 'blue', '英语': 'green',
+  '物理': 'purple', '化学': 'orange', '生物': 'pink',
+  '历史': 'orange', '地理': 'blue', '政治': 'red'
+};
+function getSubjectColor(name) {
+  if (COLOR_MAP[name]) return COLOR_MAP[name];
+  // hash
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = name.charCodeAt(i) + ((h << 5) - h);
+  return SUBJECT_COLORS[Math.abs(h) % SUBJECT_COLORS.length];
+}
+
+// 默认数据
+function getDefaultData() {
+  return {
+    settings: {
+      countdownTarget: '2026-09-01',
+      countdownLabel: '距离开学分班考还有'
+    },
+    points: 120,
+    subjects: [
+      { id: 's1', name: '语文', meta: '练习题、背课文' },
+      { id: 's2', name: '数学', meta: '练习题' },
+      { id: 's3', name: '英语', meta: '背单词、背课文' }
+    ],
+    types: [
+      { id: 't1', name: '练习题' },
+      { id: 't2', name: '背单词' },
+      { id: 't3', name: '背课文' }
+    ],
+    templates: [
+      { id: 'tp1', subject: '英语', type: '背单词', title: '背 20 个英语单词', duration: 15, points: 15 },
+      { id: 'tp2', subject: '语文', type: '练习题', title: '做一篇语文阅读理解', duration: 20, points: 20 },
+      { id: 'tp3', subject: '数学', type: '练习题', title: '做数学练习题 10 道', duration: 25, points: 25 },
+      { id: 'tp4', subject: '英语', type: '背课文', title: '背诵英语课文一篇', duration: 20, points: 20 },
+      { id: 'tp5', subject: '语文', type: '背课文', title: '背诵古诗词一首', duration: 10, points: 10 }
+    ],
+    rewards: [
+      { id: 'r1', name: '买冰淇淋一个', cost: 30 },
+      { id: 'r2', name: '看电视 30 分钟', cost: 50 },
+      { id: 'r3', name: '玩游戏 1 小时', cost: 80 },
+      { id: 'r4', name: '买一本书', cost: 200 },
+      { id: 'r5', name: '周末出去玩', cost: 300 }
+    ],
+    // 每日任务: key = date string
+    dailyTasks: {},
+    // 积分流水
+    pointsLog: [],
+    // 番茄钟计数 (per day)
+    pomodoroCount: {},
+    // 打卡日期记录
+    checkinDates: []
+  };
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const d = JSON.parse(raw);
+      // 确保所有字段都存在
+      const def = getDefaultData();
+      for (const k in def) {
+        if (!(k in d)) d[k] = def[k];
+      }
+      return d;
+    }
+  } catch(e) {}
+  return null;
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(APP));
+}
+
+let APP = loadData() || getDefaultData();
+
+// ============== 今日任务 ==============
+function getTodayTasks() {
+  const d = today();
+  if (!APP.dailyTasks[d]) APP.dailyTasks[d] = [];
+  return APP.dailyTasks[d];
+}
+
+function initTodayTasks() {
+  const d = today();
+  if (APP.dailyTasks[d] && APP.dailyTasks[d].length > 0) return;
+  // 从模板创建今日任务
+  APP.dailyTasks[d] = APP.templates.map(t => ({
+    id: uid(),
+    subject: t.subject,
+    type: t.type,
+    title: t.title,
+    duration: t.duration,
+    points: t.points,
+    completed: false,
+    enabled: true
+  }));
+  saveData();
+}
+
+// ============== 倒计时 ==============
+function updateCountdown() {
+  const target = APP.settings.countdownTarget;
+  const label = APP.settings.countdownLabel || '距离开学分班考还有';
+  const d = new Date();
+  const todayStr = (d.getMonth()+1) + '月' + d.getDate() + '日';
+  const remaining = Math.max(0, daysBetween(today(), target));
+  // kid
+  const kidDate = document.getElementById('kid-countdown-date');
+  const kidDays = document.getElementById('kid-countdown-days');
+  const kidLabel = document.querySelector('#kid-countdown .countdown-label');
+  if (kidDate) kidDate.textContent = todayStr + ' ' + fmtDate(today());
+  if (kidDays) kidDays.textContent = remaining;
+  if (kidLabel) kidLabel.textContent = label;
+  // parent
+  const pDate = document.getElementById('parent-countdown-date');
+  const pDays = document.getElementById('parent-countdown-days');
+  const pLabel = document.querySelector('#parent-countdown .countdown-label');
+  if (pDate) pDate.textContent = todayStr + ' ' + fmtDate(today());
+  if (pDays) pDays.textContent = remaining;
+  if (pLabel) pLabel.textContent = label;
+}
+
+// ============== 积分显示 ==============
+function updatePointsDisplay() {
+  document.getElementById('kid-points').textContent = APP.points;
+}
+
+// ============== 打卡天数 ==============
+function calcStreak() {
+  if (!APP.checkinDates || APP.checkinDates.length === 0) return 0;
+  const sorted = [...APP.checkinDates].sort().reverse();
+  const todayStr = today();
+  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+  const yStr = yesterday.toISOString().slice(0,10);
+  if (sorted[0] !== todayStr && sorted[0] !== yStr) return 0;
+  let streak = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    const prev = new Date(sorted[i-1]);
+    const curr = new Date(sorted[i]);
+    const diff = (prev - curr) / 86400000;
+    if (Math.abs(diff - 1) < 0.5) streak++;
+    else break;
+  }
+  return streak;
+}
+
+function recordCheckin() {
+  const d = today();
+  if (!APP.checkinDates.includes(d)) {
+    APP.checkinDates.push(d);
+    saveData();
+  }
+}
+
+// ============== 渲染小孩模式任务 ==============
+function renderTasks() {
+  const tasks = getTodayTasks().filter(t => t.enabled !== false);
+  const completedCount = tasks.filter(t => t.completed).length;
+  const totalCount = tasks.length;
+
+  document.getElementById('task-progress-title').textContent =
+    '\u4ECA\u65E5\u4EFB\u52A1\uFF08' + completedCount + '/' + totalCount + '\uFF09';
+
+  const streak = calcStreak();
+  document.getElementById('streak-text').textContent = '\u8FDE\u7EED\u6253\u5361 ' + streak + ' \u5929';
+
+  const list = document.getElementById('task-list');
+  list.innerHTML = '';
+
+  if (tasks.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">\u{1F4DD}</div>今天还没有任务哦，点击下方添加</div>';
+    return;
+  }
+
+  tasks.forEach(task => {
+    const card = document.createElement('div');
+    card.className = 'task-card' + (task.completed ? ' completed' : '');
+    card.dataset.id = task.id;
+
+    const sColor = getSubjectColor(task.subject);
+    card.innerHTML =
+      '<div class="checkbox' + (task.completed ? ' checked' : '') + '"></div>' +
+      '<div class="task-content">' +
+        '<div class="task-title">' + task.title + '</div>' +
+        '<div class="tags">' +
+          '<span class="tag tag-' + sColor + '">' + task.subject + '</span>' +
+          '<span class="tag tag-purple">' + task.type + '</span>' +
+          '<span class="tag tag-yellow">' + task.duration + ' \u5206\u949F</span>' +
+          '<span class="tag tag-points">+' + task.points + ' \u5206</span>' +
+        '</div>' +
+      '</div>' +
+      '<button class="delete-btn" data-id="' + task.id + '">\u00D7</button>' +
+      '<div class="confirm-bar" id="confirm-' + task.id + '">' +
+        '<span class="confirm-text">\u786E\u5B9A\u5220\u9664\u8FD9\u4E2A\u4EFB\u52A1\u5417\uFF1F</span>' +
+        '<button class="confirm-no" data-cancel="' + task.id + '">\u53D6\u6D88</button>' +
+        '<button class="confirm-yes" data-confirm="' + task.id + '">\u5220\u9664</button>' +
+      '</div>';
+
+    list.appendChild(card);
+  });
+
+  // 勾选事件
+  list.querySelectorAll('.checkbox').forEach(cb => {
+    cb.addEventListener('click', function() {
+      const card = this.closest('.task-card');
+      const taskId = card.dataset.id;
+      const task = getTodayTasks().find(t => t.id === taskId);
+      if (!task || task.completed) return;
+      task.completed = true;
+      card.classList.add('completed', 'completing');
+      this.classList.add('checked');
+      // 加积分
+      APP.points += task.points;
+      addPointsLog('\u5B8C\u6210\u4EFB\u52A1\uFF1A' + task.title, 'task', task.points);
+      recordCheckin();
+      saveData();
+      updatePointsDisplay();
+      showToast('\u5B8C\u6210\u4EFB\u52A1 +' + task.points + ' \u79EF\u5206', '\u{1F389}');
+      // 检查是否全部完成
+      const tasks2 = getTodayTasks().filter(t => t.enabled !== false);
+      if (tasks2.every(t => t.completed)) {
+        setTimeout(() => {
+          const bonus = 10;
+          APP.points += bonus;
+          addPointsLog('\u5F53\u65E5\u5168\u90E8\u4EFB\u52A1\u5B8C\u6210\u5956\u52B1', 'bonus', bonus);
+          saveData();
+          updatePointsDisplay();
+          showToast('\u5168\u90E8\u5B8C\u6210\uFF01\u5168\u52E4\u5956\u52B0 +' + bonus + ' \u79EF\u5206', '\u{1F3C6}');
+        }, 600);
+      }
+      setTimeout(() => {
+        card.classList.remove('completing');
+        renderTasks();
+        renderPomodoroTaskSelect();
+      }, 500);
+    });
+  });
+
+  // 删除事件
+  list.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const taskId = this.dataset.id;
+      const bar = document.getElementById('confirm-' + taskId);
+      if (bar) bar.classList.add('active');
+    });
+  });
+  list.querySelectorAll('[data-cancel]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const bar = document.getElementById('confirm-' + this.dataset.cancel);
+      if (bar) bar.classList.remove('active');
+    });
+  });
+  list.querySelectorAll('[data-confirm]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const taskId = this.dataset.confirm;
+      const tasks = getTodayTasks();
+      const idx = tasks.findIndex(t => t.id === taskId);
+      if (idx >= 0) {
+        tasks.splice(idx, 1);
+        saveData();
+        showToast('\u5DF2\u5220\u9664\u4EFB\u52A1', '\u{1F5D1}');
+        renderTasks();
+        renderPomodoroTaskSelect();
+      }
+    });
+  });
+}
+
+// ============== 添加任务模态框 ==============
+document.getElementById('btn-add-task').addEventListener('click', function() {
+  const subjectOpts = APP.subjects.map(s => '<option value="' + s.name + '">' + s.name + '</option>').join('');
+  const typeOpts = APP.types.map(t => '<option value="' + t.name + '">' + t.name + '</option>').join('');
+  const body =
+    '<div class="form-group"><label class="form-label">\u79D1\u76EE</label><select class="form-select" id="f-subject">' + subjectOpts + '</select></div>' +
+    '<div class="form-group"><label class="form-label">\u7C7B\u578B</label><select class="form-select" id="f-type">' + typeOpts + '</select></div>' +
+    '<div class="form-group"><label class="form-label">\u4EFB\u52A1\u6807\u9898</label><input class="form-input" id="f-title" placeholder="\u8BF7\u8F93\u5165\u4EFB\u52A1\u6807\u9898"></div>' +
+    '<div class="form-row">' +
+      '<div class="form-group"><label class="form-label">\u65F6\u957F\uFF08\u5206\u949F\uFF09</label><input class="form-input" id="f-duration" type="number" value="15" min="1"></div>' +
+      '<div class="form-group"><label class="form-label">\u79EF\u5206</label><input class="form-input" id="f-points" type="number" value="15" min="1"></div>' +
+    '</div>';
+  showModal('\u6DFB\u52A0\u4EFB\u52A1', body, function() {
+    const subject = document.getElementById('f-subject').value;
+    const type = document.getElementById('f-type').value;
+    const title = document.getElementById('f-title').value.trim();
+    const duration = parseInt(document.getElementById('f-duration').value) || 15;
+    const points = parseInt(document.getElementById('f-points').value) || 15;
+    if (!title) { showToast('\u8BF7\u8F93\u5165\u4EFB\u52A1\u6807\u9898', '\u{26A0}'); return; }
+    getTodayTasks().push({ id: uid(), subject, type, title, duration, points, completed: false, enabled: true });
+    saveData();
+    closeModal();
+    renderTasks();
+    renderPomodoroTaskSelect();
+    showToast('\u4EFB\u52A1\u5DF2\u6DFB\u52A0', '\u{2705}');
+  });
+});
+
+// ============== 积分流水 ==============
+function addPointsLog(desc, type, amount) {
+  APP.pointsLog.push({ id: uid(), desc, type, amount, time: now() });
+  saveData();
+}
+
+// ============== 番茄钟 ==============
+const FOCUS_TIME = 25 * 60;
+const REST_TIME = 5 * 60;
+const POMO_BONUS = 10;
+
+let pomoState = {
+  mode: 'focus',
+  remaining: FOCUS_TIME,
+  running: false,
+  timer: null,
+  linkedTaskId: null,
+  completedToday: 0
+};
+
+function getPomoCount() {
+  const d = today();
+  if (!APP.pomodoroCount[d]) APP.pomodoroCount[d] = 0;
+  return APP.pomodoroCount[d];
+}
+
+function updatePomoDisplay() {
+  const total = pomoState.mode === 'focus' ? FOCUS_TIME : REST_TIME;
+  const m = Math.floor(pomoState.remaining / 60);
+  const s = pomoState.remaining % 60;
+  document.getElementById('pomo-time').textContent =
+    String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  document.getElementById('pomo-mode').textContent =
+    pomoState.mode === 'focus' ? '\u4E13\u6CE8\u65F6\u95F4' : '\u4F11\u606F\u65F6\u95F4';
+
+  const progress = 1 - pomoState.remaining / total;
+  const deg = 360 * progress;
+  const ring = document.getElementById('timer-ring');
+  if (pomoState.mode === 'focus') {
+    ring.style.background = 'conic-gradient(#E84393 0deg, #E84393 ' + deg + 'deg, #FFFFFF ' + deg + 'deg, #FFFFFF 360deg)';
+  } else {
+    ring.style.background = 'conic-gradient(#55EFC4 0deg, #55EFC4 ' + deg + 'deg, #FFFFFF ' + deg + 'deg, #FFFFFF 360deg)';
+  }
+
+  pomoState.completedToday = getPomoCount();
+  document.getElementById('pomo-count').textContent =
+    '\u4ECA\u5929\u5DF2\u5B8C\u6210 ' + pomoState.completedToday + ' \u4E2A\u756A\u8304';
+
+  // linked task
+  const chip = document.getElementById('pomo-linked-task');
+  if (pomoState.linkedTaskId) {
+    const t = getTodayTasks().find(x => x.id === pomoState.linkedTaskId);
+    if (t) { chip.textContent = '\u5173\u8054\u4EFB\u52A1\uFF1A' + t.title; chip.style.display = ''; return; }
+  }
+  chip.textContent = '\u672A\u5173\u8054\u4EFB\u52A1';
+}
+
+function renderPomodoroTaskSelect() {
+  const bar = document.getElementById('pomo-task-select');
+  const tasks = getTodayTasks().filter(t => !t.completed && t.enabled !== false);
+  bar.innerHTML = '';
+  if (tasks.length === 0) {
+    bar.style.display = 'none';
+    return;
+  }
+  bar.style.display = 'flex';
+  tasks.forEach(t => {
+    const chip = document.createElement('div');
+    chip.className = 'task-select-chip' + (pomoState.linkedTaskId === t.id ? ' selected' : '');
+    chip.textContent = t.title;
+    chip.addEventListener('click', function() {
+      bar.querySelectorAll('.task-select-chip').forEach(c => c.classList.remove('selected'));
+      if (pomoState.linkedTaskId === t.id) {
+        pomoState.linkedTaskId = null;
+      } else {
+        pomoState.linkedTaskId = t.id;
+        this.classList.add('selected');
+      }
+      updatePomoDisplay();
+    });
+    bar.appendChild(chip);
+  });
+}
+
+function togglePomo() {
+  const btn = document.getElementById('pomo-toggle');
+  if (pomoState.running) {
+    clearInterval(pomoState.timer);
+    pomoState.running = false;
+    btn.textContent = pomoState.mode === 'focus' ? '\u7EE7\u7EED\u4E13\u6CE8' : '\u7EE7\u7EED\u4F11\u606F';
+  } else {
+    pomoState.timer = setInterval(() => {
+      pomoState.remaining--;
+      updatePomoDisplay();
+      if (pomoState.remaining <= 0) {
+        clearInterval(pomoState.timer);
+        pomoState.running = false;
+        if (pomoState.mode === 'focus') {
+          // 完成一个番茄
+          APP.pomodoroCount[today()] = (APP.pomodoroCount[today()] || 0) + 1;
+          APP.points += POMO_BONUS;
+          addPointsLog('\u5B8C\u6210\u4E00\u4E2A\u756A\u8304\u949F', 'pomo', POMO_BONUS);
+          recordCheckin();
+          saveData();
+          updatePointsDisplay();
+          showToast('\u756A\u8304\u949F\u5B8C\u6210\uFF01+' + POMO_BONUS + ' \u79EF\u5206', '\u{1F345}');
+          // 自动切换到休息
+          pomoState.mode = 'rest';
+          pomoState.remaining = REST_TIME;
+          btn.textContent = '\u5F00\u59CB\u4F11\u606F';
+        } else {
+          showToast('\u4F11\u606F\u7ED3\u675F\uFF0C\u7EE7\u7EED\u52A0\u6CB9\uFF01', '\u{1F4AA}');
+          pomoState.mode = 'focus';
+          pomoState.remaining = FOCUS_TIME;
+          pomoState.linkedTaskId = null;
+          btn.textContent = '\u5F00\u59CB\u4E13\u6CE8';
+          renderPomodoroTaskSelect();
+        }
+        updatePomoDisplay();
+      }
+    }, 1000);
+    pomoState.running = true;
+    btn.textContent = pomoState.mode === 'focus' ? '\u6682\u505C\u4E13\u6CE8' : '\u6682\u505C\u4F11\u606F';
+  }
+}
+
+document.getElementById('pomo-toggle').addEventListener('click', togglePomo);
+document.getElementById('pomo-reset').addEventListener('click', () => {
+  clearInterval(pomoState.timer);
+  pomoState.running = false;
+  pomoState.mode = 'focus';
+  pomoState.remaining = FOCUS_TIME;
+  pomoState.linkedTaskId = null;
+  document.getElementById('pomo-toggle').textContent = '\u5F00\u59CB\u4E13\u6CE8';
+  updatePomoDisplay();
+  renderPomodoroTaskSelect();
+});
+
+document.querySelectorAll('[data-pomo-mode]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (pomoState.running) return; // 运行中不能切换
+    document.querySelectorAll('[data-pomo-mode]').forEach(b => b.classList.toggle('active', b === btn));
+    pomoState.mode = btn.dataset.pomoMode;
+    pomoState.remaining = pomoState.mode === 'focus' ? FOCUS_TIME : REST_TIME;
+    document.getElementById('pomo-toggle').textContent = pomoState.mode === 'focus' ? '\u5F00\u59CB\u4E13\u6CE8' : '\u5F00\u59CB\u4F11\u606F';
+    updatePomoDisplay();
+  });
+});
+
+// ============== 积分商城 ==============
+function renderShop() {
+  const grid = document.getElementById('shop-grid');
+  grid.innerHTML = '';
+  APP.rewards.forEach(r => {
+    const canAfford = APP.points >= r.cost;
+    const card = document.createElement('div');
+    card.className = 'reward-card';
+    card.innerHTML =
+      '<div class="reward-icon"><span style="font-size:36px;">\u{1F381}</span></div>' +
+      '<div class="reward-name">' + r.name + '</div>' +
+      '<div class="reward-cost">' + r.cost + ' \u79EF\u5206</div>' +
+      (canAfford
+        ? '<button class="btn-purple-grad" data-reward-id="' + r.id + '">\u5151\u6362</button>'
+        : '<button class="btn-grey-grad insufficient" disabled>\u79EF\u5206\u4E0D\u8DB3</button>');
+    grid.appendChild(card);
+  });
+
+  grid.querySelectorAll('.btn-purple-grad[data-reward-id]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const rId = this.dataset.rewardId;
+      const r = APP.rewards.find(x => x.id === rId);
+      if (!r || APP.points < r.cost) return;
+      APP.points -= r.cost;
+      addPointsLog('\u5151\u6362\u5956\u54C1\uFF1A' + r.name, 'reward', -r.cost);
+      saveData();
+      updatePointsDisplay();
+      renderShop();
+      showToast('\u5151\u6362\u6210\u529F\uFF1A' + r.name, '\u{1F381}');
+    });
+  });
+}
+
+// ============== 家长模式 - 统计概览 ==============
+function renderOverview() {
+  // 统计数据
+  const tasks = getTodayTasks().filter(t => t.enabled !== false);
+  const todayCompleted = tasks.filter(t => t.completed).length;
+  const streak = calcStreak();
+
+  // 总完成率: 所有天任务
+  let totalTasks = 0, totalCompleted = 0;
+  for (const d in APP.dailyTasks) {
+    const dt = APP.dailyTasks[d];
+    totalTasks += dt.length;
+    totalCompleted += dt.filter(t => t.completed).length;
+  }
+  const rate = totalTasks > 0 ? Math.round(totalCompleted / totalTasks * 100) : 0;
+
+  document.getElementById('stats-row').innerHTML =
+    '<div class="stat-card"><div class="stat-value blue">' + APP.points + '</div><div class="stat-label">\u5F53\u524D\u79EF\u5206</div></div>' +
+    '<div class="stat-card"><div class="stat-value green">' + streak + '</div><div class="stat-label">\u8FDE\u7EED\u6253\u5361\u5929\u6570</div></div>' +
+    '<div class="stat-card"><div class="stat-value orange">' + rate + '%</div><div class="stat-label">\u603B\u5B8C\u6210\u7387</div></div>' +
+    '<div class="stat-card"><div class="stat-value" style="color:var(--c-text);">' + tasks.length + '</div><div class="stat-label">\u4EFB\u52A1\u603B\u6570</div></div>';
+
+  // 各科分布
+  const subjectMap = {};
+  tasks.forEach(t => {
+    if (!subjectMap[t.subject]) subjectMap[t.subject] = { total: 0, completed: 0 };
+    subjectMap[t.subject].total++;
+    if (t.completed) subjectMap[t.subject].completed++;
+  });
+  const maxCount = Math.max(1, ...Object.values(subjectMap).map(s => s.total));
+  const fillColors = ['red','blue','green','purple','orange','pink'];
+
+  const distEl = document.getElementById('subject-dist');
+  if (Object.keys(subjectMap).length === 0) {
+    distEl.innerHTML = '<h3>\u5404\u79D1\u4EFB\u52A1\u5206\u5E03</h3><div class="empty-state">\u6682\u65E0\u4EFB\u52A1\u6570\u636E</div>';
+  } else {
+    let html = '<h3>\u5404\u79D1\u4EFB\u52A1\u5206\u5E03</h3>';
+    let ci = 0;
+    for (const name in subjectMap) {
+      const s = subjectMap[name];
+      const pct = Math.round(s.total / maxCount * 100);
+      const color = fillColors[ci % fillColors.length];
+      html += '<div class="subject-row"><div class="subject-name"><span class="dot" style="background:var(--c-' + color + ');"></span>' + name + ' <span class="count">' + s.total + ' \u4E2A\u4EFB\u52A1</span></div><div class="progress-bar"><div class="progress-fill ' + color + '" style="width:' + pct + '%"></div></div></div>';
+      ci++;
+    }
+    distEl.innerHTML = html;
+  }
+
+  // 周报柱状图
+  const days = [];
+  const labels = ['\u65E5','\u4E00','\u4E8C','\u4E09','\u56DB','\u4E94','\u516D'];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const ds = d.toISOString().slice(0,10);
+    const dt = APP.dailyTasks[ds] || [];
+    const cnt = dt.filter(t => t.completed).length;
+    days.push({ label: labels[d.getDay()], count: cnt });
+  }
+  const maxDay = Math.max(1, ...days.map(d => d.count));
+
+  const chartWrap = document.getElementById('weekly-chart-wrap');
+  let chartHTML = '<h3>\u6700\u8FD1 7 \u5929\u5B8C\u6210\u60C5\u51B5</h3><div class="chart-bars">';
+  days.forEach(d => {
+    const h = d.count > 0 ? Math.round(d.count / maxDay * 100) : 8;
+    const empty = d.count === 0 ? ' empty' : '';
+    chartHTML += '<div class="bar-col"><div class="bar-value">' + d.count + '</div><div class="bar' + empty + '" style="height:' + h + '%"></div></div>';
+  });
+  chartHTML += '</div><div class="chart-labels">';
+  days.forEach(d => { chartHTML += '<span>' + d.label + '</span>'; });
+  chartHTML += '</div>';
+  chartWrap.innerHTML = chartHTML;
+}
+
+// ============== 家长模式 - 历史记录 ==============
+function renderHistory() {
+  const el = document.getElementById('history-list');
+  // 从积分流水中提取任务完成记录
+  const logs = APP.pointsLog.filter(l => l.type === 'task' || l.type === 'pomo').slice().reverse();
+  if (logs.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">\u{1F4C5}</div>\u6682\u65E0\u5386\u53F2\u8BB0\u5F55</div>';
+    return;
+  }
+  el.innerHTML = '';
+  logs.slice(0, 30).forEach(log => {
+    const card = document.createElement('div');
+    card.className = 'history-card';
+    card.innerHTML =
+      '<div class="history-date">' + fmtDateShort(log.time) + '</div>' +
+      '<div class="history-title">' + log.desc + '</div>' +
+      '<div class="history-duration">' + fmtDateTime(log.time) + '</div>' +
+      '<div class="history-points">' + (log.amount > 0 ? '+' : '') + log.amount + '</div>';
+    el.appendChild(card);
+  });
+}
+
+// ============== 家长模式 - 模板管理 ==============
+function renderTemplates() {
+  document.getElementById('template-title').textContent = '\u4EFB\u52A1\u6A21\u677F\uFF08' + APP.templates.length + ' \u4E2A\uFF09';
+  const el = document.getElementById('template-list');
+  el.innerHTML = '';
+  if (APP.templates.length === 0) {
+    el.innerHTML = '<div class="empty-state">\u6682\u65E0\u6A21\u677F\uFF0C\u70B9\u51FB\u4E0A\u65B9\u65B0\u589E</div>';
+    return;
+  }
+  APP.templates.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'template-card';
+    const color = getSubjectColor(t.subject);
+    card.innerHTML =
+      '<span class="template-dot" style="background:var(--c-' + color + ');"></span>' +
+      '<div class="template-info"><div class="template-name">' + t.title + '</div><div class="template-meta">' + t.type + ' \u00B7 ' + t.duration + ' \u5206\u949F \u00B7 +' + t.points + '\u5206</div></div>' +
+      '<div class="template-actions">' +
+        '<button class="btn-edit" data-id="' + t.id + '">\u7F16\u8F91</button>' +
+        '<button class="btn-delete" data-id="' + t.id + '">\u5220\u9664</button>' +
+      '</div>' +
+      '<div class="confirm-bar" id="tc-' + t.id + '"><span class="confirm-text">\u786E\u5B9A\u5220\u9664\uFF1F</span><button class="confirm-no" data-tcancel="' + t.id + '">\u53D6\u6D88</button><button class="confirm-yes" data-tconfirm="' + t.id + '">\u5220\u9664</button></div>';
+    el.appendChild(card);
+  });
+
+  el.querySelectorAll('.btn-edit[data-id]').forEach(btn => {
+    btn.addEventListener('click', function() { editTemplate(this.dataset.id); });
+  });
+  el.querySelectorAll('.btn-delete[data-id]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const bar = document.getElementById('tc-' + this.dataset.id);
+      if (bar) bar.classList.add('active');
+    });
+  });
+  el.querySelectorAll('[data-tcancel]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const bar = document.getElementById('tc-' + this.dataset.tcancel);
+      if (bar) bar.classList.remove('active');
+    });
+  });
+  el.querySelectorAll('[data-tconfirm]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const id = this.dataset.tconfirm;
+      APP.templates = APP.templates.filter(t => t.id !== id);
+      saveData();
+      showToast('\u6A21\u677F\u5DF2\u5220\u9664', '\u{1F5D1}');
+      renderTemplates();
+    });
+  });
+}
+
+function editTemplate(id) {
+  const t = APP.templates.find(x => x.id === id);
+  if (!t) return;
+  const subjectOpts = APP.subjects.map(s => '<option value="' + s.name + '"' + (s.name === t.subject ? ' selected' : '') + '>' + s.name + '</option>').join('');
+  const typeOpts = APP.types.map(tp => '<option value="' + tp.name + '"' + (tp.name === t.type ? ' selected' : '') + '>' + tp.name + '</option>').join('');
+  const body =
+    '<div class="form-group"><label class="form-label">\u79D1\u76EE</label><select class="form-select" id="f-subject">' + subjectOpts + '</select></div>' +
+    '<div class="form-group"><label class="form-label">\u7C7B\u578B</label><select class="form-select" id="f-type">' + typeOpts + '</select></div>' +
+    '<div class="form-group"><label class="form-label">\u4EFB\u52A1\u6807\u9898</label><input class="form-input" id="f-title" value="' + t.title + '"></div>' +
+    '<div class="form-row"><div class="form-group"><label class="form-label">\u65F6\u957F\uFF08\u5206\u949F\uFF09</label><input class="form-input" id="f-duration" type="number" value="' + t.duration + '" min="1"></div><div class="form-group"><label class="form-label">\u79EF\u5206</label><input class="form-input" id="f-points" type="number" value="' + t.points + '" min="1"></div></div>';
+  showModal('\u7F16\u8F91\u6A21\u677F', body, function() {
+    const title = document.getElementById('f-title').value.trim();
+    if (!title) { showToast('\u8BF7\u8F93\u5165\u6807\u9898', '\u{26A0}'); return; }
+    t.subject = document.getElementById('f-subject').value;
+    t.type = document.getElementById('f-type').value;
+    t.title = title;
+    t.duration = parseInt(document.getElementById('f-duration').value) || 15;
+    t.points = parseInt(document.getElementById('f-points').value) || 15;
+    saveData(); closeModal();
+    renderTemplates();
+    showToast('\u6A21\u677F\u5DF2\u66F4\u65B0', '\u{2705}');
+  });
+}
+
+document.getElementById('btn-add-template').addEventListener('click', function() {
+  const subjectOpts = APP.subjects.map(s => '<option value="' + s.name + '">' + s.name + '</option>').join('');
+  const typeOpts = APP.types.map(t => '<option value="' + t.name + '">' + t.name + '</option>').join('');
+  const body =
+    '<div class="form-group"><label class="form-label">\u79D1\u76EE</label><select class="form-select" id="f-subject">' + subjectOpts + '</select></div>' +
+    '<div class="form-group"><label class="form-label">\u7C7B\u578B</label><select class="form-select" id="f-type">' + typeOpts + '</select></div>' +
+    '<div class="form-group"><label class="form-label">\u4EFB\u52A1\u6807\u9898</label><input class="form-input" id="f-title" placeholder="\u8BF7\u8F93\u5165\u4EFB\u52A1\u6807\u9898"></div>' +
+    '<div class="form-row"><div class="form-group"><label class="form-label">\u65F6\u957F\uFF08\u5206\u949F\uFF09</label><input class="form-input" id="f-duration" type="number" value="15" min="1"></div><div class="form-group"><label class="form-label">\u79EF\u5206</label><input class="form-input" id="f-points" type="number" value="15" min="1"></div></div>';
+  showModal('\u65B0\u589E\u6A21\u677F', body, function() {
+    const title = document.getElementById('f-title').value.trim();
+    if (!title) { showToast('\u8BF7\u8F93\u5165\u6807\u9898', '\u{26A0}'); return; }
+    APP.templates.push({
+      id: uid(),
+      subject: document.getElementById('f-subject').value,
+      type: document.getElementById('f-type').value,
+      title,
+      duration: parseInt(document.getElementById('f-duration').value) || 15,
+      points: parseInt(document.getElementById('f-points').value) || 15
+    });
+    saveData(); closeModal();
+    renderTemplates();
+    showToast('\u6A21\u677F\u5DF2\u6DFB\u52A0', '\u{2705}');
+  });
+});
+
+// ============== 家长模式 - 奖品管理 ==============
+function renderRewards() {
+  document.getElementById('rewards-title').textContent = '\u5956\u54C1\u5217\u8868\uFF08' + APP.rewards.length + ' \u4E2A\uFF09';
+  const el = document.getElementById('rewards-list');
+  el.innerHTML = '';
+  if (APP.rewards.length === 0) {
+    el.innerHTML = '<div class="empty-state">\u6682\u65E0\u5956\u54C1\uFF0C\u70B9\u51FB\u4E0A\u65B9\u65B0\u589E</div>';
+    return;
+  }
+  APP.rewards.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'manager-card';
+    card.innerHTML =
+      '<div class="manager-icon orange"><span style="font-size:22px;">\u{1F381}</span></div>' +
+      '<div class="manager-info"><div class="manager-name">' + r.name + '</div><div class="manager-meta">' + r.cost + ' \u79EF\u5206</div></div>' +
+      '<div class="template-actions">' +
+        '<button class="btn-edit" data-id="' + r.id + '">\u7F16\u8F91</button>' +
+        '<button class="btn-delete" data-id="' + r.id + '">\u5220\u9664</button>' +
+      '</div>' +
+      '<div class="confirm-bar" id="rc-' + r.id + '"><span class="confirm-text">\u786E\u5B9A\u5220\u9664\uFF1F</span><button class="confirm-no" data-rcancel="' + r.id + '">\u53D6\u6D88</button><button class="confirm-yes" data-rconfirm="' + r.id + '">\u5220\u9664</button></div>';
+    el.appendChild(card);
+  });
+  el.querySelectorAll('.btn-edit[data-id]').forEach(btn => {
+    btn.addEventListener('click', function() { editReward(this.dataset.id); });
+  });
+  el.querySelectorAll('.btn-delete[data-id]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.getElementById('rc-' + this.dataset.id).classList.add('active');
+    });
+  });
+  el.querySelectorAll('[data-rcancel]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.getElementById('rc-' + this.dataset.rcancel).classList.remove('active');
+    });
+  });
+  el.querySelectorAll('[data-rconfirm]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const id = this.dataset.rconfirm;
+      APP.rewards = APP.rewards.filter(r => r.id !== id);
+      saveData(); showToast('\u5956\u54C1\u5DF2\u5220\u9664', '\u{1F5D1}'); renderRewards();
+    });
+  });
+}
+
+function editReward(id) {
+  const r = APP.rewards.find(x => x.id === id);
+  if (!r) return;
+  const body =
+    '<div class="form-group"><label class="form-label">\u5956\u54C1\u540D\u79F0</label><input class="form-input" id="f-name" value="' + r.name + '"></div>' +
+    '<div class="form-group"><label class="form-label">\u6240\u9700\u79EF\u5206</label><input class="form-input" id="f-cost" type="number" value="' + r.cost + '" min="1"></div>';
+  showModal('\u7F16\u8F91\u5956\u54C1', body, function() {
+    const name = document.getElementById('f-name').value.trim();
+    if (!name) { showToast('\u8BF7\u8F93\u5165\u540D\u79F0', '\u{26A0}'); return; }
+    r.name = name;
+    r.cost = parseInt(document.getElementById('f-cost').value) || 1;
+    saveData(); closeModal();
+    renderRewards(); renderShop();
+    showToast('\u5956\u54C1\u5DF2\u66F4\u65B0', '\u{2705}');
+  });
+}
+
+document.getElementById('btn-add-reward').addEventListener('click', function() {
+  const body =
+    '<div class="form-group"><label class="form-label">\u5956\u54C1\u540D\u79F0</label><input class="form-input" id="f-name" placeholder="\u8BF7\u8F93\u5165\u5956\u54C1\u540D\u79F0"></div>' +
+    '<div class="form-group"><label class="form-label">\u6240\u9700\u79EF\u5206</label><input class="form-input" id="f-cost" type="number" value="50" min="1"></div>';
+  showModal('\u65B0\u589E\u5956\u54C1', body, function() {
+    const name = document.getElementById('f-name').value.trim();
+    if (!name) { showToast('\u8BF7\u8F93\u5165\u540D\u79F0', '\u{26A0}'); return; }
+    APP.rewards.push({ id: uid(), name, cost: parseInt(document.getElementById('f-cost').value) || 50 });
+    saveData(); closeModal();
+    renderRewards(); renderShop();
+    showToast('\u5956\u54C1\u5DF2\u6DFB\u52A0', '\u{2705}');
+  });
+});
+
+// ============== 家长模式 - 任务管理 ==============
+function renderPTasks() {
+  const tasks = getTodayTasks();
+  document.getElementById('ptasks-title').textContent = '\u4EFB\u52A1\u5217\u8868\uFF08' + tasks.length + ' \u4E2A\uFF09';
+  const el = document.getElementById('ptasks-list');
+  el.innerHTML = '';
+  if (tasks.length === 0) {
+    el.innerHTML = '<div class="empty-state">\u6682\u65E0\u4EFB\u52A1\uFF0C\u70B9\u51FB\u4E0A\u65B9\u65B0\u589E</div>';
+    return;
+  }
+  tasks.forEach(t => {
+    const color = getSubjectColor(t.subject);
+    const card = document.createElement('div');
+    card.className = 'manager-card';
+    card.innerHTML =
+      '<div class="manager-icon ' + color + '"><span style="font-size:20px;color:#fff;">\u{1F4DD}</span></div>' +
+      '<div class="manager-info"><div class="manager-name">' + t.title + '</div><div class="manager-meta">' + t.subject + ' \u00B7 ' + t.duration + ' \u5206\u949F' + (t.completed ? ' \u00B7 \u5DF2\u5B8C\u6210' : '') + '</div></div>' +
+      '<span class="tag tag-points">+' + t.points + '</span>' +
+      '<div class="toggle' + (t.enabled !== false ? ' on' : '') + '" data-id="' + t.id + '"></div>' +
+      '<div class="template-actions" style="margin-left:6px;">' +
+        '<button class="btn-edit" data-id="' + t.id + '">\u7F16\u8F91</button>' +
+        '<button class="btn-delete" data-id="' + t.id + '">\u5220\u9664</button>' +
+      '</div>' +
+      '<div class="confirm-bar" id="ptc-' + t.id + '"><span class="confirm-text">\u786E\u5B9A\u5220\u9664\uFF1F</span><button class="confirm-no" data-ptcancel="' + t.id + '">\u53D6\u6D88</button><button class="confirm-yes" data-ptconfirm="' + t.id + '">\u5220\u9664</button></div>';
+    el.appendChild(card);
+  });
+
+  el.querySelectorAll('.toggle[data-id]').forEach(tog => {
+    tog.addEventListener('click', function() {
+      const task = getTodayTasks().find(t => t.id === this.dataset.id);
+      if (task) {
+        task.enabled = task.enabled === false ? true : false;
+        saveData();
+        this.classList.toggle('on', task.enabled);
+        renderTasks();
+      }
+    });
+  });
+  el.querySelectorAll('.btn-edit[data-id]').forEach(btn => {
+    btn.addEventListener('click', function() { editPTask(this.dataset.id); });
+  });
+  el.querySelectorAll('.btn-delete[data-id]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.getElementById('ptc-' + this.dataset.id).classList.add('active');
+    });
+  });
+  el.querySelectorAll('[data-ptcancel]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.getElementById('ptc-' + this.dataset.ptcancel).classList.remove('active');
+    });
+  });
+  el.querySelectorAll('[data-ptconfirm]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const id = this.dataset.ptconfirm;
+      const tasks = getTodayTasks();
+      const idx = tasks.findIndex(t => t.id === id);
+      if (idx >= 0) { tasks.splice(idx, 1); saveData(); showToast('\u4EFB\u52A1\u5DF2\u5220\u9664', '\u{1F5D1}'); renderPTasks(); renderTasks(); renderPomodoroTaskSelect(); }
+    });
+  });
+}
+
+function editPTask(id) {
+  const t = getTodayTasks().find(x => x.id === id);
+  if (!t) return;
+  const subjectOpts = APP.subjects.map(s => '<option value="' + s.name + '"' + (s.name === t.subject ? ' selected' : '') + '>' + s.name + '</option>').join('');
+  const typeOpts = APP.types.map(tp => '<option value="' + tp.name + '"' + (tp.name === t.type ? ' selected' : '') + '>' + tp.name + '</option>').join('');
+  const body =
+    '<div class="form-group"><label class="form-label">\u79D1\u76EE</label><select class="form-select" id="f-subject">' + subjectOpts + '</select></div>' +
+    '<div class="form-group"><label class="form-label">\u7C7B\u578B</label><select class="form-select" id="f-type">' + typeOpts + '</select></div>' +
+    '<div class="form-group"><label class="form-label">\u4EFB\u52A1\u6807\u9898</label><input class="form-input" id="f-title" value="' + t.title + '"></div>' +
+    '<div class="form-row"><div class="form-group"><label class="form-label">\u65F6\u957F\uFF08\u5206\u949F\uFF09</label><input class="form-input" id="f-duration" type="number" value="' + t.duration + '" min="1"></div><div class="form-group"><label class="form-label">\u79EF\u5206</label><input class="form-input" id="f-points" type="number" value="' + t.points + '" min="1"></div></div>';
+  showModal('\u7F16\u8F91\u4EFB\u52A1', body, function() {
+    const title = document.getElementById('f-title').value.trim();
+    if (!title) { showToast('\u8BF7\u8F93\u5165\u6807\u9898', '\u{26A0}'); return; }
+    t.subject = document.getElementById('f-subject').value;
+    t.type = document.getElementById('f-type').value;
+    t.title = title;
+    t.duration = parseInt(document.getElementById('f-duration').value) || 15;
+    t.points = parseInt(document.getElementById('f-points').value) || 15;
+    saveData(); closeModal();
+    renderPTasks(); renderTasks(); renderPomodoroTaskSelect();
+    showToast('\u4EFB\u52A1\u5DF2\u66F4\u65B0', '\u{2705}');
+  });
+}
+
+document.getElementById('btn-add-ptask').addEventListener('click', function() {
+  const subjectOpts = APP.subjects.map(s => '<option value="' + s.name + '">' + s.name + '</option>').join('');
+  const typeOpts = APP.types.map(t => '<option value="' + t.name + '">' + t.name + '</option>').join('');
+  const body =
+    '<div class="form-group"><label class="form-label">\u79D1\u76EE</label><select class="form-select" id="f-subject">' + subjectOpts + '</select></div>' +
+    '<div class="form-group"><label class="form-label">\u7C7B\u578B</label><select class="form-select" id="f-type">' + typeOpts + '</select></div>' +
+    '<div class="form-group"><label class="form-label">\u4EFB\u52A1\u6807\u9898</label><input class="form-input" id="f-title" placeholder="\u8BF7\u8F93\u5165\u4EFB\u52A1\u6807\u9898"></div>' +
+    '<div class="form-row"><div class="form-group"><label class="form-label">\u65F6\u957F\uFF08\u5206\u949F\uFF09</label><input class="form-input" id="f-duration" type="number" value="15" min="1"></div><div class="form-group"><label class="form-label">\u79EF\u5206</label><input class="form-input" id="f-points" type="number" value="15" min="1"></div></div>';
+  showModal('\u65B0\u589E\u4EFB\u52A1', body, function() {
+    const title = document.getElementById('f-title').value.trim();
+    if (!title) { showToast('\u8BF7\u8F93\u5165\u6807\u9898', '\u{26A0}'); return; }
+    getTodayTasks().push({ id: uid(), subject: document.getElementById('f-subject').value, type: document.getElementById('f-type').value, title, duration: parseInt(document.getElementById('f-duration').value) || 15, points: parseInt(document.getElementById('f-points').value) || 15, completed: false, enabled: true });
+    saveData(); closeModal();
+    renderPTasks(); renderTasks(); renderPomodoroTaskSelect();
+    showToast('\u4EFB\u52A1\u5DF2\u6DFB\u52A0', '\u{2705}');
+  });
+});
+
+// ============== 家长模式 - 科目管理 ==============
+function renderSubjects() {
+  document.getElementById('subjects-title').textContent = '\u79D1\u76EE\u7BA1\u7406\uFF08' + APP.subjects.length + ' \u4E2A\uFF09';
+  const el = document.getElementById('subjects-list');
+  el.innerHTML = '';
+  APP.subjects.forEach(s => {
+    const color = getSubjectColor(s.name);
+    const card = document.createElement('div');
+    card.className = 'manager-card';
+    card.innerHTML =
+      '<div class="manager-icon ' + color + '"></div>' +
+      '<div class="manager-info"><div class="manager-name">' + s.name + '</div><div class="manager-meta">' + (s.meta || '') + '</div></div>' +
+      '<div class="template-actions"><button class="btn-edit" data-id="' + s.id + '">\u7F16\u8F91</button><button class="btn-delete" data-id="' + s.id + '">\u5220\u9664</button></div>' +
+      '<div class="confirm-bar" id="sc-' + s.id + '"><span class="confirm-text">\u786E\u5B9A\u5220\u9664\uFF1F</span><button class="confirm-no" data-scancel="' + s.id + '">\u53D6\u6D88</button><button class="confirm-yes" data-sconfirm="' + s.id + '">\u5220\u9664</button></div>';
+    el.appendChild(card);
+  });
+  el.querySelectorAll('.btn-edit[data-id]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const s = APP.subjects.find(x => x.id === this.dataset.id);
+      if (!s) return;
+      const body =
+        '<div class="form-group"><label class="form-label">\u79D1\u76EE\u540D\u79F0</label><input class="form-input" id="f-name" value="' + s.name + '"></div>' +
+        '<div class="form-group"><label class="form-label">\u5907\u6CE8</label><input class="form-input" id="f-meta" value="' + (s.meta || '') + '"></div>';
+      showModal('\u7F16\u8F91\u79D1\u76EE', body, function() {
+        const name = document.getElementById('f-name').value.trim();
+        if (!name) { showToast('\u8BF7\u8F93\u5165\u540D\u79F0', '\u{26A0}'); return; }
+        s.name = name; s.meta = document.getElementById('f-meta').value.trim();
+        saveData(); closeModal(); renderSubjects();
+        showToast('\u79D1\u76EE\u5DF2\u66F4\u65B0', '\u{2705}');
+      });
+    });
+  });
+  el.querySelectorAll('.btn-delete[data-id]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.getElementById('sc-' + this.dataset.id).classList.add('active');
+    });
+  });
+  el.querySelectorAll('[data-scancel]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.getElementById('sc-' + this.dataset.scancel).classList.remove('active');
+    });
+  });
+  el.querySelectorAll('[data-sconfirm]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const id = this.dataset.sconfirm;
+      APP.subjects = APP.subjects.filter(s => s.id !== id);
+      saveData(); showToast('\u79D1\u76EE\u5DF2\u5220\u9664', '\u{1F5D1}'); renderSubjects();
+    });
+  });
+}
+
+document.getElementById('btn-add-subject').addEventListener('click', function() {
+  const body =
+    '<div class="form-group"><label class="form-label">\u79D1\u76EE\u540D\u79F0</label><input class="form-input" id="f-name" placeholder="\u8BF7\u8F93\u5165\u79D1\u76EE\u540D\u79F0"></div>' +
+    '<div class="form-group"><label class="form-label">\u5907\u6CE8</label><input class="form-input" id="f-meta" placeholder="\u53EF\u9009"></div>';
+  showModal('\u65B0\u589E\u79D1\u76EE', body, function() {
+    const name = document.getElementById('f-name').value.trim();
+    if (!name) { showToast('\u8BF7\u8F93\u5165\u540D\u79F0', '\u{26A0}'); return; }
+    APP.subjects.push({ id: uid(), name, meta: document.getElementById('f-meta').value.trim() });
+    saveData(); closeModal(); renderSubjects();
+    showToast('\u79D1\u76EE\u5DF2\u6DFB\u52A0', '\u{2705}');
+  });
+});
+
+// ============== 家长模式 - 类型管理 ==============
+function renderTypes() {
+  document.getElementById('types-title').textContent = '\u4EFB\u52A1\u7C7B\u578B\uFF08' + APP.types.length + ' \u4E2A\uFF09';
+  const el = document.getElementById('types-list');
+  el.innerHTML = '';
+  APP.types.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'manager-card';
+    card.innerHTML =
+      '<div class="manager-icon purple"><span style="font-size:18px;color:#fff;">\u{1F4CB}</span></div>' +
+      '<div class="manager-info"><div class="manager-name">' + t.name + '</div></div>' +
+      '<div class="template-actions"><button class="btn-edit" data-id="' + t.id + '">\u7F16\u8F91</button><button class="btn-delete" data-id="' + t.id + '">\u5220\u9664</button></div>' +
+      '<div class="confirm-bar" id="tyc-' + t.id + '"><span class="confirm-text">\u786E\u5B9A\u5220\u9664\uFF1F</span><button class="confirm-no" data-tycancel="' + t.id + '">\u53D6\u6D88</button><button class="confirm-yes" data-tyconfirm="' + t.id + '">\u5220\u9664</button></div>';
+    el.appendChild(card);
+  });
+  el.querySelectorAll('.btn-edit[data-id]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const t = APP.types.find(x => x.id === this.dataset.id);
+      if (!t) return;
+      showModal('\u7F16\u8F91\u7C7B\u578B', '<div class="form-group"><label class="form-label">\u7C7B\u578B\u540D\u79F0</label><input class="form-input" id="f-name" value="' + t.name + '"></div>', function() {
+        const name = document.getElementById('f-name').value.trim();
+        if (!name) { showToast('\u8BF7\u8F93\u5165\u540D\u79F0', '\u{26A0}'); return; }
+        t.name = name; saveData(); closeModal(); renderTypes();
+        showToast('\u7C7B\u578B\u5DF2\u66F4\u65B0', '\u{2705}');
+      });
+    });
+  });
+  el.querySelectorAll('.btn-delete[data-id]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.getElementById('tyc-' + this.dataset.id).classList.add('active');
+    });
+  });
+  el.querySelectorAll('[data-tycancel]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.getElementById('tyc-' + this.dataset.tycancel).classList.remove('active');
+    });
+  });
+  el.querySelectorAll('[data-tyconfirm]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const id = this.dataset.tyconfirm;
+      APP.types = APP.types.filter(t => t.id !== id);
+      saveData(); showToast('\u7C7B\u578B\u5DF2\u5220\u9664', '\u{1F5D1}'); renderTypes();
+    });
+  });
+}
+
+document.getElementById('btn-add-type').addEventListener('click', function() {
+  showModal('\u65B0\u589E\u7C7B\u578B', '<div class="form-group"><label class="form-label">\u7C7B\u578B\u540D\u79F0</label><input class="form-input" id="f-name" placeholder="\u8BF7\u8F93\u5165\u7C7B\u578B\u540D\u79F0"></div>', function() {
+    const name = document.getElementById('f-name').value.trim();
+    if (!name) { showToast('\u8BF7\u8F93\u5165\u540D\u79F0', '\u{26A0}'); return; }
+    APP.types.push({ id: uid(), name });
+    saveData(); closeModal(); renderTypes();
+    showToast('\u7C7B\u578B\u5DF2\u6DFB\u52A0', '\u{2705}');
+  });
+});
+
+// ============== 家长模式 - 积分流水 ==============
+function renderPointsLog() {
+  let totalEarned = 0, totalSpent = 0;
+  APP.pointsLog.forEach(l => { if (l.amount > 0) totalEarned += l.amount; else totalSpent += Math.abs(l.amount); });
+
+  document.getElementById('points-stats').innerHTML =
+    '<div class="points-stat"><div class="value blue">' + APP.points + '</div><div class="label">\u5F53\u524D\u79EF\u5206</div></div>' +
+    '<div class="points-stat"><div class="value green">' + totalEarned + '</div><div class="label">\u7D2F\u8BA1\u83B7\u5F97</div></div>' +
+    '<div class="points-stat"><div class="value orange">' + totalSpent + '</div><div class="label">\u7D2F\u8BA1\u6D88\u8D39</div></div>' +
+    '<div class="points-stat"><div class="value" style="color:var(--c-text);">' + APP.pointsLog.length + '</div><div class="label">\u8BB0\u5F55\u603B\u6570</div></div>';
+
+  const el = document.getElementById('points-log-list');
+  el.innerHTML = '';
+  const logs = APP.pointsLog.slice().reverse().slice(0, 50);
+  if (logs.length === 0) {
+    el.innerHTML = '<div class="empty-state">\u6682\u65E0\u79EF\u5206\u8BB0\u5F55</div>';
+    return;
+  }
+  logs.forEach(l => {
+    const card = document.createElement('div');
+    card.className = 'log-card';
+    let tagClass = 'purple', tagText = '\u4EFB\u52A1\u5B8C\u6210';
+    if (l.type === 'reward') { tagClass = 'pink'; tagText = '\u5151\u6362\u5956\u54C1'; }
+    else if (l.type === 'bonus') { tagClass = 'green'; tagText = '\u5168\u52E4\u5956\u52B1'; }
+    else if (l.type === 'pomo') { tagClass = 'green'; tagText = '\u756A\u8304\u949F'; }
+    card.innerHTML =
+      '<div class="log-info"><div class="log-desc">' + l.desc + '</div><div class="log-meta"><span class="log-tag ' + tagClass + '">' + tagText + '</span><span class="log-date">' + fmtDateTime(l.time) + '</span></div></div>' +
+      '<div class="log-amount ' + (l.amount > 0 ? 'plus' : 'minus') + '">' + (l.amount > 0 ? '+' : '') + l.amount + '</div>';
+    el.appendChild(card);
+  });
+}
+
+// ============== 倒计时编辑 ==============
+document.getElementById('btn-edit-countdown').addEventListener('click', function() {
+  const body =
+    '<div class="form-group"><label class="form-label">\u76EE\u6807\u65E5\u671F</label><input class="form-input" id="f-date" type="date" value="' + APP.settings.countdownTarget + '"></div>' +
+    '<div class="form-group"><label class="form-label">\u5012\u8BA1\u65F6\u6807\u7B7E</label><input class="form-input" id="f-label" value="' + (APP.settings.countdownLabel || '\u8DDD\u79BB\u5F00\u5B66\u5206\u73ED\u8003\u8FD8\u6709') + '"></div>';
+  showModal('\u7F16\u8F91\u5012\u8BA1\u65F6', body, function() {
+    APP.settings.countdownTarget = document.getElementById('f-date').value;
+    APP.settings.countdownLabel = document.getElementById('f-label').value.trim() || '\u8DDD\u79BB\u5F00\u5B66\u5206\u73ED\u8003\u8FD8\u6709';
+    saveData(); closeModal(); updateCountdown();
+    showToast('\u5012\u8BA1\u65F6\u5DF2\u66F4\u65B0', '\u{2705}');
+  });
+});
+
 // ============== 模式切换 ==============
 document.querySelectorAll('.mode-switch button').forEach(btn => {
   btn.addEventListener('click', () => {
     const mode = btn.dataset.mode;
     document.querySelectorAll('.mode-switch button').forEach(b => b.classList.toggle('active', b === btn));
     document.querySelectorAll('.mode-content').forEach(c => c.classList.toggle('active', c.id === 'mode-' + mode));
+    if (mode === 'parent') {
+      renderOverview(); renderHistory(); renderTemplates();
+      renderRewards(); renderPTasks(); renderSubjects();
+      renderTypes(); renderPointsLog(); updateCountdown();
+    } else {
+      renderTasks(); renderShop(); updateCountdown();
+      renderPomodoroTaskSelect(); updatePomoDisplay();
+    }
   });
 });
 
@@ -1820,6 +1958,8 @@ document.querySelectorAll('[data-kid-page]').forEach(btn => {
     const page = btn.dataset.kidPage;
     document.querySelectorAll('[data-kid-page]').forEach(b => b.classList.toggle('active', b === btn));
     document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + page));
+    if (page === 'shop') renderShop();
+    if (page === 'pomodoro') { renderPomodoroTaskSelect(); updatePomoDisplay(); }
   });
 });
 
@@ -1829,78 +1969,35 @@ document.querySelectorAll('[data-parent-page]').forEach(btn => {
     const page = btn.dataset.parentPage;
     document.querySelectorAll('[data-parent-page]').forEach(b => b.classList.toggle('active', b === btn));
     document.querySelectorAll('.parent-page').forEach(p => p.classList.toggle('active', p.id === 'parent-' + page));
+    // 刷新对应页
+    if (page === 'overview') renderOverview();
+    if (page === 'history') renderHistory();
+    if (page === 'templates') renderTemplates();
+    if (page === 'rewards') renderRewards();
+    if (page === 'tasks') renderPTasks();
+    if (page === 'subjects') renderSubjects();
+    if (page === 'types') renderTypes();
+    if (page === 'points') renderPointsLog();
   });
 });
 
-// ============== 番茄钟 ==============
-const pomoState = { mode: 'focus', remaining: 25 * 60, running: false, timer: null };
-const TOTAL = 25 * 60;
+// ============== 初始化 ==============
+function init() {
+  initTodayTasks();
+  updateCountdown();
+  updatePointsDisplay();
+  renderTasks();
+  updatePomoDisplay();
+  renderPomodoroTaskSelect();
+  renderShop();
 
-function updatePomo() {
-  const m = Math.floor(pomoState.remaining / 60);
-  const s = pomoState.remaining % 60;
-  document.getElementById('pomo-time').textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
-  document.getElementById('pomo-mode').textContent = pomoState.mode === 'focus' ? '专注时间' : '休息时间';
-  // 更新环形进度
-  const deg = 360 * (1 - pomoState.remaining / TOTAL);
-  const ring = document.getElementById('timer-ring');
-  if (pomoState.mode === 'focus') {
-    ring.style.background = `conic-gradient(#E84393 0deg, #E84393 ${deg}deg, #FFFFFF ${deg}deg, #FFFFFF 360deg)`;
-  } else {
-    ring.style.background = `conic-gradient(#55EFC4 0deg, #55EFC4 ${deg}deg, #FFFFFF ${deg}deg, #FFFFFF 360deg)`;
-  }
+  // 每分钟刷新倒计时
+  setInterval(updateCountdown, 60000);
 }
 
-function togglePomo() {
-  const btn = document.getElementById('pomo-toggle');
-  if (pomoState.running) {
-    clearInterval(pomoState.timer);
-    pomoState.running = false;
-    btn.textContent = pomoState.mode === 'focus' ? '继续专注' : '继续休息';
-  } else {
-    pomoState.timer = setInterval(() => {
-      pomoState.remaining--;
-      updatePomo();
-      if (pomoState.remaining <= 0) clearInterval(pomoState.timer);
-    }, 1000);
-    pomoState.running = true;
-    btn.textContent = pomoState.mode === 'focus' ? '暂停专注' : '暂停休息';
-  }
-}
+init();
 
-document.getElementById('pomo-toggle').addEventListener('click', togglePomo);
-document.getElementById('pomo-reset').addEventListener('click', () => {
-  clearInterval(pomoState.timer);
-  pomoState.running = false;
-  pomoState.remaining = TOTAL;
-  document.getElementById('pomo-toggle').textContent = '开始专注';
-  updatePomo();
-});
-
-document.querySelectorAll('[data-pomo-mode]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-pomo-mode]').forEach(b => b.classList.toggle('active', b === btn));
-    pomoState.mode = btn.dataset.pomoMode;
-    pomoState.remaining = pomoState.mode === 'focus' ? 25 * 60 : 5 * 60;
-    clearInterval(pomoState.timer);
-    pomoState.running = false;
-    document.getElementById('pomo-toggle').textContent = pomoState.mode === 'focus' ? '开始专注' : '开始休息';
-    updatePomo();
-  });
-});
-
-// ============== Toggle Switch ==============
-document.querySelectorAll('.toggle').forEach(t => {
-  t.addEventListener('click', () => t.classList.toggle('on'));
-});
-
-// ============== 任务勾选 ==============
-document.querySelectorAll('.checkbox').forEach(cb => {
-  cb.addEventListener('click', () => {
-    cb.classList.toggle('checked');
-    cb.closest('.task-card').classList.toggle('completed', cb.classList.contains('checked'));
-  });
-});
+})();
 </script>
 </body>
 </html>
