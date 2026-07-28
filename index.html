@@ -1223,12 +1223,12 @@ async function cloudLogin(pin, name) {
     CloudState.familyName = result.name;
     saveCloudState();
     
-    // 如果是新家庭，上传本地数据
     if (result.isNew) {
+      // 新家庭：上传本地数据到服务器
       await cloudSave();
     } else {
-      // 已有家庭，下载云端数据（合并到本地）
-      await cloudLoad(true);
+      // 已有家庭：本地数据优先，上传覆盖服务器
+      await cloudSave();
     }
     
     setSyncStatus('synced');
@@ -1310,7 +1310,7 @@ async function cloudSave() {
   }, 3000);
 }
 
-// 手动同步
+// 手动同步：上传本地数据到服务器
 async function manualSync() {
   if (!CloudState.familyId) {
     openCloudLoginModal();
@@ -1318,16 +1318,14 @@ async function manualSync() {
   }
   setSyncStatus('syncing');
   try {
-    const success = await cloudLoad(true);
-    if (success) {
-      // 重新渲染所有视图
-      renderAll();
-      setSyncStatus('synced');
-      toast('同步成功');
-    } else {
-      setSyncStatus('error');
-      toast('同步失败');
-    }
+    // 本地数据上传到服务器
+    await cloudApi(`/data/${CloudState.familyId}`, {
+      method: 'POST',
+      body: JSON.stringify({ data: APP })
+    });
+    CloudState.lastSyncTime = new Date();
+    setSyncStatus('synced');
+    toast('已上传到云端');
   } catch(e) {
     setSyncStatus('error');
     toast('同步失败: ' + e.message);
@@ -2464,12 +2462,10 @@ function init() {
   // 每分钟刷新倒计时
   setInterval(updateCountdown, 60000);
   
-  // 页面可见时自动同步
+  // 页面可见时自动上传本地数据
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden && CloudState.familyId) {
-      cloudLoad(true).then(success => {
-        if (success) renderAll();
-      });
+      cloudSave();
     }
   });
 }
