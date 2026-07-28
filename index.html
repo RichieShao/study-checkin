@@ -1135,9 +1135,9 @@ function loadData() {
 
 // ============== 云同步层 ==============
 const CLOUD_CONFIG = {
-  // 后端 API 地址（服务器 IP 或域名）
-  // 部署后改为 'https://每天学习打卡.club/api'
-  apiBase: 'http://8.138.42.7/api',
+  // 后端 API 地址
+  // 使用相对路径，自动跟随当前域名（支持 IP、HTTP、HTTPS）
+  apiBase: '/api',
   enabled: true
 };
 
