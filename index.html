@@ -2427,6 +2427,11 @@ function doCloudLogout() {
   closeModal();
 }
 
+// 暴露到全局作用域，供 HTML onclick 调用
+window.manualSync = manualSync;
+window.doCloudLogin = doCloudLogin;
+window.doCloudLogout = doCloudLogout;
+
 // ============== 统一渲染 ==============
 function renderAll() {
   updateCountdown();
