@@ -1024,25 +1024,29 @@ function showToast(text, icon) {
 }
 
 // ============== 模态框 ==============
-function showModal(title, bodyHTML, onConfirm) {
+function showModal(title, bodyHTML, onConfirm, hideFooter) {
   const overlay = document.getElementById('modal-overlay');
   const content = document.getElementById('modal-content');
+  const footerHTML = hideFooter ? '' :
+    '<div class="modal-actions">' +
+      '<button class="btn-grey-grad" id="modal-cancel">取消</button>' +
+      '<button class="btn-pink-grad" id="modal-confirm">确认</button>' +
+    '</div>';
   content.innerHTML =
     '<div class="modal-header">' +
       '<span class="modal-title">' + title + '</span>' +
       '<button class="modal-close" id="modal-close-btn">\u00D7</button>' +
     '</div>' +
     '<div id="modal-body">' + bodyHTML + '</div>' +
-    '<div class="modal-actions">' +
-      '<button class="btn-grey-grad" id="modal-cancel">取消</button>' +
-      '<button class="btn-pink-grad" id="modal-confirm">确认</button>' +
-    '</div>';
+    footerHTML;
   overlay.classList.add('active');
   document.getElementById('modal-close-btn').onclick = closeModal;
-  document.getElementById('modal-cancel').onclick = closeModal;
-  document.getElementById('modal-confirm').onclick = function() {
-    if (onConfirm) onConfirm();
-  };
+  if (!hideFooter) {
+    document.getElementById('modal-cancel').onclick = closeModal;
+    document.getElementById('modal-confirm').onclick = function() {
+      if (onConfirm) onConfirm();
+    };
+  }
 }
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('active');
@@ -2391,7 +2395,7 @@ function openCloudLoginModal() {
     `;
   }
   
-  openModal('云同步', content, { showFooter: false });
+  showModal('云同步', content, null, true);
 }
 
 async function doCloudLogin() {
